@@ -125,28 +125,32 @@ class Pos_model extends CI_Model {
 
 
 		if($command=='update'){
-				$sales_entry = array(
-		    				'sales_date' 				=> $sales_date,
-		    				'sales_status' 				=> 'Final',
-		    				'customer_id' 				=> $customer_id,
-		    				/*'warehouse_id' 				=> $warehouse_id,*/
-		    				/*Discount*/
-		    				'discount_to_all_input' 	=> $discount_input,
-		    				'discount_to_all_type' 		=> $discount_type,
-		    				'tot_discount_to_all_amt' 	=> $tot_disc,
-		    				/*Subtotal & Total */
-		    				'subtotal' 					=> $tot_amt,
-		    				'round_off' 				=> $round_off,
-		    				'grand_total' 				=> $tot_grand,
-		    			);
+			$this->session->set_flashdata('success', 'Success!! Sales Created Successfully!'.$sms_info);
+			return "success<<<###>>>$sales_id";
+			exit();
 
-				$q3 = $this->db->where('id',$sales_id)->update('db_sales', $sales_entry);
+			$sales_entry = array(
+						'sales_date' 				=> $sales_date,
+						'sales_status' 				=> 'Final',
+						'customer_id' 				=> $customer_id,
+						/*'warehouse_id' 				=> $warehouse_id,*/
+						/*Discount*/
+						'discount_to_all_input' 	=> $discount_input,
+						'discount_to_all_type' 		=> $discount_type,
+						'tot_discount_to_all_amt' 	=> $tot_disc,
+						/*Subtotal & Total */
+						'subtotal' 					=> $tot_amt,
+						'round_off' 				=> $round_off,
+						'grand_total' 				=> $tot_grand,
+					);
 
-				$q11=$this->db->query("delete from db_salesitems where sales_id='$sales_id'");
-				$q12=$this->db->query("delete from db_salespayments where sales_id='$sales_id'");
-				if(!$q11 || !$q12){
-					return "failed";
-				}
+			$q3 = $this->db->where('id',$sales_id)->update('db_sales', $sales_entry);
+
+			$q11=$this->db->query("delete from db_salesitems where sales_id='$sales_id'");
+			$q12=$this->db->query("delete from db_salespayments where sales_id='$sales_id'");
+			if(!$q11 || !$q12){
+				return "failed";
+			}
 		} else{
 			//GET SALES INITIAL
 			$q5=$this->db->query("select sales_init from db_company where id=1");
@@ -238,6 +242,8 @@ class Pos_model extends CI_Model {
 				if($total_cost=='' || $total_cost==0){$total_cost=0;}
 				/* ******************************** */
 
+				$add_dis = round(($add_dis_one * $price_per_unit * $sales_qty),2);
+				$aaadis = $add_dis_one * $price_per_unit;
 				$salesitems_entry = array(
 		    				'sales_id' 			=> $sales_id,
 		    				'sales_status'		=> 'Final',
@@ -250,7 +256,8 @@ class Pos_model extends CI_Model {
 		    				'tax_amt' 			=> $tax_amt,
 		    				'unit_discount_per' => $dis_per_qty,
 		    				'discount_amt' 		=> $dis_too,
-		    				'additional_dis'    => $add_dis_one * $price_per_unit,        // Additional Discount
+		    				'additional_dis'    => $aaadis, //Additional Discount per unit
+		    				'add_dis_tot'    	=> $add_dis, //Additional Discount total
 		    				'unit_total_cost' 	=> $price_per_unit,
 		    				'total_cost' 		=> $total_cost,
 		    				'status'	 		=> 1,

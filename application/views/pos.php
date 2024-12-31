@@ -702,7 +702,7 @@
     var discount        =$('#div_'+id).attr('data-item-discount');
     var profit_margin   =$('#div_'+id).attr('data_item_profit_margin');
     var sales_price_temp=sales_price;
-    sales_price         =(parseFloat(sales_price+item_tax_amt)).toFixed(2);
+    // sales_price         =(parseFloat(sales_price+item_tax_amt)).toFixed(2);
 
 
     var quantity ='<div class="input-group input-group-sm"><span class="input-group-btn"><button onclick="decrement_qty('+item_id+','+rowcount+')" type="button" class="btn btn-default btn-flat"><i class="fa fa-minus text-danger"></i></button></span>';
@@ -715,6 +715,8 @@
         quantity +='<input type="hidden" name="profit_row_'+item_id+'" id="profit_row_'+item_id+'" value="'+profit_margin+'">';
         quantity +='<input type="hidden" name="dis_row_'+item_id+'" id="dis_row_'+item_id+'" value="'+discount+'">';
 
+        quantity +='<input type="hidden" id="sales_price_'+rowcount+'" name="sales_price_'+rowcount+'" value="'+sales_price+'">';
+
         quantity +='<span class="input-group-btn"><button onclick="increment_qty('+item_id+','+rowcount+')" type="button" class="btn btn-default btn-flat"><i class="fa fa-plus text-success"></i></button></span></div>';
 
 
@@ -722,22 +724,22 @@
     var remove_btn      ='<a class="fa fa-fw fa-trash-o text-red" style="cursor: pointer;font-size: 20px;" onclick="removerow('+rowcount+')" title="Delete Item?"></a>';
 
     var str=' <tr id="row_'+rowcount+'" data-row="0" data-item-id='+item_id+'>';/*item id*/
-        str+='<td id="td_'+rowcount+'_0">'+ item_name     +'</td>';/* td_0_0 item name*/
+        str+='<td id="td_'+rowcount+'_0">'+ item_name +'</td>';/* td_0_0 item name*/
         // str+='<td id="td_'+rowcount+'_7">'+ pPrice +'</td>';/* td_0_7 item purchase price*/
         str+='<td id="td_'+rowcount+'_1">'+ stock +'</td>';/* td_0_1 item available qty*/
         str+='<td id="td_'+rowcount+'_8">'+ mrp +'</td>';/* td_0_8 item MRP*/
-        str+='<td id="td_'+rowcount+'_2">'+ quantity      +'</td>';/* td_0_2 item available qty*/
+        str+='<td id="td_'+rowcount+'_2">'+ quantity +'</td>';/* td_0_2 item available qty*/
         // str+='<td id="td_'+rowcount+'_9">'+ item_tax_amt +'</td>';/* td_0_9 item tax amount*/
 
-        info='<input id="sales_price_'+rowcount+'" onblur="set_to_original('+rowcount+','+item_cost+')" onkeyup="update_price('+rowcount+','+item_cost+')" name="sales_price_'+rowcount+'" type="text" class="form-control" value="'+sales_price+'">';
+        /* info='<input id="sales_price_'+rowcount+'" onblur="set_to_original('+rowcount+','+item_cost+')" onkeyup="update_price('+rowcount+','+item_cost+')" name="sales_price_'+rowcount+'" type="text" class="form-control" value="'+sales_price+'" readonly >'; */
 
         adis ='<input type="number" value="0" class="form-control" onkeyup="make_subtotal('+item_id+','+rowcount+')" id="item_adis_'+item_id+'" name="item_adis_'+item_id+'" ></input>';
 
-        str+='<td id="td_'+rowcount+'_3" class="text-right">'+ info +'</td>';/* td_0_3 item sales price*/
+        str+='<td id="td_'+rowcount+'_3" class="text-right">'+ sales_price +'</td>';/* td_0_3 item sales price*/
         str+='<td id="td_'+rowcount+'_6" class="text-right">'+ discount +'</td>';/* td_0_3 item discount*/
         str+='<td id="td_'+rowcount+'_7" class="text-right" style="display:none">'+ adis +'</td>';/* td_0_3 item additional discount*/
         str+='<td id="td_'+rowcount+'_4" class="text-right">'+ sub_total +'</td>';/* td_0_4 item sub_total */
-        str+='<td id="td_'+rowcount+'_5">'+ remove_btn    +'</td>';/* td_0_5 item gst_amt */
+        str+='<td id="td_'+rowcount+'_5">'+ remove_btn +'</td>';/* td_0_5 item gst_amt */
 
         str+='<input type="hidden" name="tr_item_id_'+rowcount+'" id="tr_item_id_'+rowcount+'" value="'+item_id+'">';
        // str+='<input type="hidden" id="tr_item_per_'+rowcount+'" name="tr_item_per_'+rowcount+'" value="'+gst_per+'">';
@@ -1109,6 +1111,11 @@ $(document).ready(function() {
     afterSelect: function (item) {
 
       if(item.stock==0){
+        toastr["error"]("Out of Stock!");
+        $("#item_search").val('');
+        return;
+      }
+      if(item.stock < 0){
         toastr["error"]("Out of Stock!");
         $("#item_search").val('');
         return;

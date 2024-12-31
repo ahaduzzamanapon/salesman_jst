@@ -387,10 +387,10 @@
           <?php } ?> -->
 
 
-          <a href="<?php echo $base_url; ?>sales_return/print_invoice/<?php echo  $return_id ?>" target="_blank" class="btn btn-warning">
+         <!--  <a href="<?php echo $base_url; ?>sales_return/print_invoice/<?php echo  $return_id ?>" target="_blank" class="btn btn-warning">
             <i class="fa fa-print"></i>
           Print
-        </a>
+        </a> -->
 
 
 

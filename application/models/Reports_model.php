@@ -8,11 +8,11 @@ class Reports_model extends CI_Model {
 
 		$from_date=date("Y-m-d",strtotime($from_date));
 		$to_date=date("Y-m-d",strtotime($to_date));
-		
+
 		$this->db->select("a.id,a.sales_code,a.sales_date,b.customer_name,b.customer_code,a.grand_total,a.paid_amount, a.other_charges_tax_id as vat_id");
-	    
+
 		if($customer_id!=''){
-			
+
 			$this->db->where("a.customer_id=$customer_id");
 		}
 		if($view_all=="no"){
@@ -23,10 +23,10 @@ class Reports_model extends CI_Model {
 		$this->db->where("a.`sales_status`= 'Final'");
 		$this->db->from("db_customers as b");
 
-		
-		
+
+
 		//echo $this->db->get_compiled_select();exit();
-		
+
 		$q1=$this->db->get();
 		// echo "<pre>";print_r($q1->result());exit;
 		if($q1->num_rows()>0){
@@ -65,7 +65,7 @@ class Reports_model extends CI_Model {
 			echo "<td class='text-center text-danger' colspan=13>No Records Found</td>";
 			echo "</tr>";
 		}
-		
+
 	    exit;
 	}
 
@@ -74,11 +74,11 @@ class Reports_model extends CI_Model {
 
 		$from_date=date("Y-m-d",strtotime($from_date));
 		$to_date=date("Y-m-d",strtotime($to_date));
-		
-		$this->db->select("a.id,a.return_code,a.return_date,b.customer_name,b.customer_code,a.grand_total,a.paid_amount");
-	    
+
+		$this->db->select("a.id,a.sales_id,a.return_code,a.return_date,b.customer_name,b.customer_code,a.grand_total,a.paid_amount");
+
 		if($customer_id!=''){
-			
+
 			$this->db->where("a.customer_id=$customer_id");
 		}
 		if($view_all=="no"){
@@ -89,10 +89,10 @@ class Reports_model extends CI_Model {
 		$this->db->from("db_customers as b");
 		$this->db->select("CASE WHEN c.sales_code IS NULL THEN '' ELSE c.sales_code END AS sales_code");
 		$this->db->join('db_sales as c','c.id=a.sales_id','left');
-		
-		
+
+
 		//echo $this->db->get_compiled_select();exit();
-		
+
 		$q1=$this->db->get();
 		if($q1->num_rows()>0){
 			$i=0;
@@ -104,8 +104,8 @@ class Reports_model extends CI_Model {
 				echo "<td>".++$i."</td>";
 				echo "<td><a title='View Invoice' href='".base_url("sales_return/invoice/$res1->id")."'>".$res1->return_code."</a></td>";
 				echo "<td>".show_date($res1->return_date)."</td>";
-				
-				echo (!empty($res1->sales_code)) ? "<td><a title='Return Raised Against this Invoice' href='".base_url("sales/invoice/$res1->id")."'>".$res1->sales_code."</a></td>" : '<td>-NA-</td>';
+
+				echo (!empty($res1->sales_code)) ? "<td><a title='Return Raised Against this Invoice' href='".base_url("sales/invoice/$res1->sales_id")."'>".$res1->sales_code."</a></td>" : '<td>-NA-</td>';
 				echo "<td>".$res1->customer_name."</td>";
 				$vat = $this->db->where("id",$res1->vat_id)->get('db_tax')->row();
 				echo "<td>". ceil($vat->tax)."% </td>";
@@ -131,18 +131,18 @@ class Reports_model extends CI_Model {
 			echo "<td class='text-center text-danger' colspan=13>No Records Found</td>";
 			echo "</tr>";
 		}
-		
+
 	    exit;
 	}
 
 	public function show_purchase_report(){
 		extract($_POST);
-		
+
 		$from_date=date("Y-m-d",strtotime($from_date));
 		$to_date=date("Y-m-d",strtotime($to_date));
-		
+
 		$this->db->select("a.id,a.purchase_code,a.purchase_date,b.supplier_name,b.supplier_code,a.grand_total,a.paid_amount");
-	    
+
 		if($supplier_id!=''){
 			$this->db->where("a.supplier_id=$supplier_id");
 		}
@@ -153,9 +153,9 @@ class Reports_model extends CI_Model {
 		$this->db->from("db_purchase as a");
 		$this->db->where("a.`purchase_status`= 'Received'");
 		$this->db->from("db_suppliers as b");
-		
+
 		//echo $this->db->get_compiled_select();
-		
+
 		$q1=$this->db->get();
 		if($q1->num_rows()>0){
 			$i=0;
@@ -193,18 +193,18 @@ class Reports_model extends CI_Model {
 			echo "<td class='text-center text-danger' colspan=13>No Records Found</td>";
 			echo "</tr>";
 		}
-		
+
 	    exit;
 	}
 
 	public function show_purchase_return_report(){
 		extract($_POST);
-		
+
 		$from_date=date("Y-m-d",strtotime($from_date));
 		$to_date=date("Y-m-d",strtotime($to_date));
-		
+
 		$this->db->select("a.id,a.return_code,a.return_date,b.supplier_name,a.grand_total,a.paid_amount");
-	    
+
 		if($supplier_id!=''){
 			$this->db->where("a.supplier_id=$supplier_id");
 		}
@@ -216,9 +216,9 @@ class Reports_model extends CI_Model {
 		$this->db->from("db_suppliers as b");
 		$this->db->select("CASE WHEN c.purchase_code IS NULL THEN '' ELSE c.purchase_code END AS purchase_code");
 		$this->db->join('db_purchase as c','c.id=a.purchase_id','left');
-		
+
 		//echo $this->db->get_compiled_select();
-		
+
 		$q1=$this->db->get();
 		if($q1->num_rows()>0){
 			$i=0;
@@ -231,7 +231,7 @@ class Reports_model extends CI_Model {
 				echo "<td><a title='View Invoice' href='".base_url("purchase_return/invoice/$res1->id")."'>".$res1->return_code."</a></td>";
 				echo "<td>".show_date($res1->return_date)."</td>";
 				echo (!empty($res1->purchase_code)) ? "<td><a title='Return Raised Against this Invoice' href='".base_url("purchase/invoice/$res1->id")."'>".$res1->purchase_code."</a></td>" : '<td>-NA-</td>';
-				
+
 				echo "<td>".$res1->supplier_name."</td>";
 				$vat = $this->db->where("id",$res1->vat_id)->get('db_tax')->row();
 				echo "<td>". ceil($vat->tax)."% </td>";
@@ -257,19 +257,19 @@ class Reports_model extends CI_Model {
 			echo "<td class='text-center text-danger' colspan=13>No Records Found</td>";
 			echo "</tr>";
 		}
-		
+
 	    exit;
 	}
-	
+
 	public function show_expense_report(){
 		extract($_POST);
 		$from_date=date("Y-m-d",strtotime($from_date));
 		$to_date=date("Y-m-d",strtotime($to_date));
 
 		/*$q1=$this->db->query("SELECT a.*,b.category_name from db_expense as a,db_expense_category as b where b.id=a.category_id and a.expense_date>='$from_date' and expense_date<='$to_date'");*/
-		
+
 		$this->db->select("a.*,b.category_name");
-	    
+
 		if($category_id!=''){
 			$this->db->where("a.category_id=$category_id");
 		}
@@ -279,11 +279,11 @@ class Reports_model extends CI_Model {
 		$this->db->where("b.`id`= a.`category_id`");
 		$this->db->from("db_expense as a");
 		$this->db->from("db_expense_category as b");
-		
+
 		//echo $this->db->get_compiled_select();
-		
+
 		$q1=$this->db->get();
-		
+
 		if($q1->num_rows()>0){
 			$i=0;
 			$tot_expense_amt=0;
@@ -311,20 +311,20 @@ class Reports_model extends CI_Model {
 			echo "<td class='text-center text-danger' colspan=13>No Records Found</td>";
 			echo "</tr>";
 		}
-		
+
 	    exit;
 	}
 	public function show_stock_report(){
 		extract($_POST);
 
-		
+
 		$this->db->select("a.*,b.*");
 		$this->db->from("db_items as a,db_tax as b");
 		$this->db->where("b.id=a.tax_id");
 		$this->db->order_by("a.id");
-		
+
 		//echo $this->db->get_compiled_select();exit();
-		
+
 		$q1=$this->db->get();
 		if($q1->num_rows()>0){
 			$i=0;
@@ -360,7 +360,7 @@ class Reports_model extends CI_Model {
 			echo "<td class='text-center text-danger' colspan=13>No Records Found</td>";
 			echo "</tr>";
 		}
-		
+
 	    exit;
 	}
 	public function show_item_sales_report(){
@@ -368,11 +368,11 @@ class Reports_model extends CI_Model {
 
 		$from_date=date("Y-m-d",strtotime($from_date));
 		$to_date=date("Y-m-d",strtotime($to_date));
-		
+
 		$this->db->select("a.id,a.sales_code,a.sales_date,b.customer_name,b.customer_code,a.grand_total,a.paid_amount");
 		$this->db->select("c.sales_qty,d.item_name");
-	    
-	    
+
+
 		if($view_all=="no"){
 			$this->db->where("(a.sales_date>='$from_date' and a.sales_date<='$to_date')");
 		}
@@ -389,11 +389,11 @@ class Reports_model extends CI_Model {
 		if($item_id!=''){
 			$this->db->where("c.item_id=$item_id");
 		}
-		
-		
-		
+
+
+
 		//echo $this->db->get_compiled_select();exit();
-		
+
 		$q1=$this->db->get();
 		if($q1->num_rows()>0){
 			$i=0;
@@ -430,7 +430,7 @@ class Reports_model extends CI_Model {
 			echo "<td class='text-center text-danger' colspan=13>No Records Found</td>";
 			echo "</tr>";
 		}
-		
+
 	    exit;
 	}
 	public function show_purchase_payments_report(){
@@ -438,15 +438,15 @@ class Reports_model extends CI_Model {
 		$supplier_id = $this->input->post('supplier_id');
 		$from_date=date("Y-m-d",strtotime($from_date));
 		$to_date=date("Y-m-d",strtotime($to_date));
-		
+
 		$this->db->select("c.id,c.purchase_code,a.payment_date,b.supplier_name,b.supplier_code,a.payment_type,a.payment_note,a.payment");
-	    
+
 		if($supplier_id!=''){
 			$this->db->where("c.supplier_id=$supplier_id");
 		}
 		$this->db->where("b.id=c.`supplier_id`");
 		$this->db->where("(a.payment_date>='$from_date' and a.payment_date<='$to_date')");
-		
+
 		$this->db->where("c.id=a.purchase_id");
 
 		$this->db->from("db_purchasepayments as a");
@@ -454,9 +454,9 @@ class Reports_model extends CI_Model {
 		$this->db->from("db_purchase as c");
 		$this->db->where("c.`purchase_status`= 'Received'");
 		//$this->db->group_by("c.purchase_code");
-		
+
 		//echo $this->db->get_compiled_select();
-		
+
 		$q1=$this->db->get();
 		if($q1->num_rows()>0){
 			$i=0;
@@ -485,23 +485,23 @@ class Reports_model extends CI_Model {
 			echo "<td class='text-center text-danger' colspan=8>No Records Found</td>";
 			echo "</tr>";
 		}
-		
+
 	    exit;
 	}
 	public function show_sales_payments_report(){
 		extract($_POST);
-		
+
 		$from_date=date("Y-m-d",strtotime($from_date));
 		$to_date=date("Y-m-d",strtotime($to_date));
-		
+
 		$this->db->select("c.id,c.sales_code,a.payment_date,b.customer_name,b.customer_code,a.payment_type,a.payment_note,a.payment");
-	    
+
 		if($customer_id!=''){
 			$this->db->where("c.customer_id=$customer_id");
 		}
 		$this->db->where("b.id=c.`customer_id`");
 		$this->db->where("(a.payment_date>='$from_date' and a.payment_date<='$to_date')");
-		
+
 		$this->db->where("c.id=a.sales_id");
 
 		$this->db->from("db_salespayments as a");
@@ -509,9 +509,9 @@ class Reports_model extends CI_Model {
 		$this->db->from("db_sales as c");
 		$this->db->where("c.`sales_status`= 'Final'");
 		//$this->db->group_by("c.sales_code");
-		
+
 		//echo $this->db->get_compiled_select();
-		
+
 		$q1=$this->db->get();
 		if($q1->num_rows()>0){
 			$i=0;
@@ -540,7 +540,7 @@ class Reports_model extends CI_Model {
 			echo "<td class='text-center text-danger' colspan=8>No Records Found</td>";
 			echo "</tr>";
 		}
-		
+
 	    exit;
 	}
 	/*Expired Items Report*/
@@ -548,22 +548,22 @@ class Reports_model extends CI_Model {
 		extract($_POST);
 		$CI =& get_instance();
 
-		
+
 		$to_date=date("Y-m-d",strtotime($to_date));
-		
+
 		$this->db->select("id,item_code,item_name,expire_date,stock,lot_number");
-	    
+
 		if($item_id!=''){
-			
+
 			$this->db->where("id=$item_id");
 		}
 		if($view_all=="no"){
 			$this->db->where("(expire_date<'$to_date')");
 		}
 		$this->db->from("db_items");
-		
+
 		//echo $this->db->get_compiled_select();exit();
-		
+
 		$q1=$this->db->get();
 		if($q1->num_rows()>0){
 			$i=0;
@@ -583,7 +583,7 @@ class Reports_model extends CI_Model {
 			echo "<td class='text-center text-danger' colspan=6>No Records Found</td>";
 			echo "</tr>";
 		}
-		
+
 	    exit;
 	}
 
@@ -592,22 +592,22 @@ class Reports_model extends CI_Model {
 		extract($_POST);
 		$from_date=date("Y-m-d",strtotime($from_date));
 		$to_date=date("Y-m-d",strtotime($to_date));
-		
+
 		$q1=$this->db->query("
 				SELECT b.tax_amt,b.item_id,a.item_name,COALESCE(sum(b.sales_qty),0) as sales_qty,a.purchase_price,
 						COALESCE(SUM(total_cost),0) as total_cost
 				FROM db_items as a, db_salesitems as b, db_sales as c
-				WHERE 
+				WHERE
 				c.id=b.sales_id
 				and
-				a.id=b.item_id 
+				a.id=b.item_id
 				and
 				c.sales_status='Final'
 				and
 				( c.sales_date>='".$from_date."' and  c.sales_date<='".$to_date."')
 				GROUP BY item_id
 			");
-		
+
 		if($q1->num_rows()>0){
 			$i=0;
 			$tot_purchase_price=0;
@@ -625,18 +625,18 @@ class Reports_model extends CI_Model {
 				$purchase_return_qty=$this->db->query("
 						SELECT COALESCE(sum(return_qty),0) as return_qty
 						FROM db_purchaseitemsreturn
-						WHERE 
+						WHERE
 						item_id =".$res1->item_id)->row()->return_qty;
 
 				/*Sales Return Quantity*/
 				$q3=$this->db->query("
 						SELECT COALESCE(sum(total_cost),0) as total_cost,COALESCE(sum(return_qty),0) as return_qty
 						FROM db_salesitemsreturn
-						WHERE 
+						WHERE
 						item_id =".$res1->item_id);
 				$sales_return_total_cost=$q3->row()->total_cost;
 				$sales_return_qty=$q3->row()->return_qty;
-				
+
 				$qty = $res1->sales_qty-$sales_return_qty;
 				$purchase_price = $res1->purchase_price * $qty;
 
@@ -677,7 +677,7 @@ class Reports_model extends CI_Model {
 					  <td class='text-bold'>".$tot_sales_qty."</td>
 					  <td class='text-right text-bold'>".$CI->currency(number_format($tot_purchase_price,2,'.',''))."</td>
 					  <td class='text-right text-bold'>".$CI->currency(number_format($tot_sales_cost,2,'.',''))."</td>
-					  
+
 					  <td class='text-right text-bold'>".$CI->currency(number_format($gross_profit,2,'.',''))."</td>
 					  <td class='text-right text-bold'>".$CI->currency(number_format($tot_net_profit,2,'.',''))."</td>
 				  </tr>";
@@ -692,7 +692,7 @@ class Reports_model extends CI_Model {
 			echo "<td class='text-center text-danger' colspan=7>No Records Found</td>";
 			echo "</tr>";
 		}
-		
+
 	    exit;
 	}
 	public function get_profit_by_invoice(){
@@ -700,8 +700,8 @@ class Reports_model extends CI_Model {
 		extract($_POST);
 		$from_date=date("Y-m-d",strtotime($from_date));
 		$to_date=date("Y-m-d",strtotime($to_date));
-		$q1=$this->db->query("SELECT a.id,a.sales_date,a.sales_code,b.customer_name from db_sales as a,db_customers as b 
-								where 
+		$q1=$this->db->query("SELECT a.id,a.sales_date,a.sales_code,b.customer_name from db_sales as a,db_customers as b
+								where
 								a.sales_status='Final'
 								and
 								b.id=a.customer_id");
@@ -730,9 +730,9 @@ class Reports_model extends CI_Model {
 				$sales_price = ($q2->row()->total_cost-$q3->row()->total_cost);
 
 				$profit = $sales_price - $purchase_price;
-				
+
 				/*$sales_tax_amt =$this->db->query("select COALESCE(SUM(tax_amt),0) AS tax_amt from db_salesitems where sales_id=".$res1->id)->row()->tax_amt;
-				
+
 				$sales_return_tax_amt =$this->db->query("select COALESCE(SUM(tax_amt),0) AS tax_amt from db_salesitemsreturn where sales_id=".$res1->id)->row()->tax_amt;
 
 				$net_profit = $profit + ($sales_tax_amt-$sales_return_tax_amt);*/
@@ -756,7 +756,7 @@ class Reports_model extends CI_Model {
 					  <td class='text-right text-bold'>".$CI->currency(number_format($tot_purchase_price,2,'.',''))."</td>
 					  <td class='text-right text-bold'>".$CI->currency(number_format($tot_sales_cost,2,'.',''))."</td>
 					  <td class='text-right text-bold'>".$CI->currency(number_format($tot_profit,2,'.',''))."</td>
-					  
+
 				  </tr>";
 		}
 		else{
@@ -764,23 +764,23 @@ class Reports_model extends CI_Model {
 			echo "<td class='text-center text-danger' colspan=7>No Records Found</td>";
 			echo "</tr>";
 		}
-		
+
 	    exit;
 	}
 
 	public function brand_wise_stock(){
 		extract($_POST);
 
-		
+
 		$this->db->select("a.item_name,COALESCE(sum(a.stock),0) as stock");
 		$this->db->select("b.brand_name");
 		$this->db->from("db_items as a");
 		$this->db->join('db_brands as b', 'b.id=a.brand_id', 'left');
 		$this->db->order_by("b.brand_name");
 		$this->db->group_by("b.brand_name");
-		
+
 		//echo $this->db->get_compiled_select();exit();
-		
+
 		$q1=$this->db->get();
 		if($q1->num_rows()>0){
 			$i=0;
@@ -802,7 +802,7 @@ class Reports_model extends CI_Model {
 			echo "<td class='text-center text-danger' colspan=13>No Records Found</td>";
 			echo "</tr>";
 		}
-		
+
 	    exit;
 	}
 }

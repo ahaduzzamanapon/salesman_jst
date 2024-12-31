@@ -206,19 +206,16 @@
 						<?php
 							$i=0;
 							$total_mrp=0;
-							$over_all_discount=0;
+							$item_dis=0;
+							$additional_dis=0;
 							$total_price=0;
 							$total_tax_amt=0;
 
-
-
-
-							$q2=$this->db->query("select b.item_name,a.mr_price,a.sales_qty,a.unit_total_cost,a.price_per_unit,a.tax_amt,c.tax,a.discount_amt,a.additional_dis,a.total_cost from db_salesitems a,db_items b,db_tax c where c.id=a.tax_id and b.id=a.item_id and a.sales_id='$sales_id'");
+							$q2=$this->db->query("select b.item_name,a.mr_price,a.sales_qty,a.unit_total_cost,a.price_per_unit,a.tax_amt,c.tax,a.discount_amt,a.add_dis_tot,a.additional_dis,a.total_cost from db_salesitems a,db_items b,db_tax c where c.id=a.tax_id and b.id=a.item_id and a.sales_id='$sales_id'");
 			            	foreach ($q2->result() as $res2) {
 								//dd($res2);
 								$mrp_cost = ($res2->mr_price*$res2->sales_qty);
-								$dis_cost = $res2->discount_amt + $res2->additional_dis;
-
+								$dis_cost = $res2->discount_amt;
 
 								echo "<tr style='border-top-style: dashed;border-width: 0.1px;'>";
 								echo "<td class='class3' valign='top'>".++$i."</td>";
@@ -244,12 +241,11 @@
 								// echo  $res2->tax_amt;
 
 								$total_mrp += $mrp_cost;
-								$over_all_discount += $dis_cost;
-								$total_price += ($mrp_cost-$dis_cost);
+								$item_dis += $dis_cost;
+								$additional_dis += $res2->add_dis_tot;
+								$total_price += ($mrp_cost - $dis_cost - $res2->add_dis_tot);
 								$total_tax_amt += $res2->tax_amt;
-
 							}
-
 						?>
 				   </tbody>
 					<!-- invoice items end -->
@@ -262,19 +258,16 @@
 							<td style=" padding-left: 2px; padding-right: 2px;" align="right"><?= number_format(($total_mrp),2,'.','');?></td>
 						</tr>
 						<tr >
-							<td style=" padding-left: 2px; padding-right: 2px;" colspan="4" align="right">Discount</td>
-							<td style=" padding-left: 2px; padding-right: 2px;" align="right"><?= number_format(($over_all_discount),2,'.','');?></td>
+							<td style=" padding-left: 2px; padding-right: 2px;" colspan="4" align="right">Item Discount</td>
+							<td style=" padding-left: 2px; padding-right: 2px;" align="right"><?= number_format(($item_dis),2,'.','');?></td>
 						</tr>
 						<tr >
 							<td style=" padding-left: 2px; padding-right: 2px;" colspan="4" align="right">Over All Discount</td>
-							<td style=" padding-left: 2px; padding-right: 2px;" align="right"><?= number_format(($tot_discount_to_all_amt),2,'.','');?></td>
+							<td style=" padding-left: 2px; padding-right: 2px;" align="right"><?= number_format(($additional_dis),2,'.','');?></td>
 						</tr>
 						<tr style="border-top-style: dashed;border-width: 0.1px;">
 							<td style=" padding-left: 2px; padding-right: 2px;" colspan="4" align="right">Total Amount</td>
-							<td style=" padding-left: 2px; padding-right: 2px;" align="right"><?=  number_format(($total_mrp-($over_all_discount+$tot_discount_to_all_amt)),2,'.','');?></td>
-							<?php
-							$total_amout=number_format(($total_mrp-($over_all_discount+$tot_discount_to_all_amt)),2,'.','');
-							?>
+							<td style=" padding-left: 2px; padding-right: 2px;" align="right"><?=  number_format($total_price,2,'.','');?></td>
 						</tr>
 						<tr style="border-top-style: dashed;border-width: 0.1px;">
 							<td style=" padding-left: 2px; padding-right: 2px;" colspan="4" align="right">Vat</td>
@@ -284,7 +277,7 @@
 						<tr style="border-top-style: dashed;border-width: 0.1px;">
 							<td style=" padding-left: 2px; padding-right: 2px;" colspan="4" align="right">Grand total</td>
 							     <td style="padding-left: 2px; padding-right: 2px;" align="right">
-                                <?= number_format(($total_amout + $total_tax_amt), 2, '.', ''); ?>
+                                <?= number_format(($total_price + $total_tax_amt), 2, '.', ''); ?>
                             </td>
                         </tr>
 
@@ -324,11 +317,9 @@
 
 						<tr>
 							<td colspan="5" align="center">
-
 								<div style="display:inline-block;vertical-align:middle;line-height:16px !important;">
 									<img class="center-block" style=" width: 100%; opacity: 1.0" src="<?php echo base_url();?>barcode/<?php echo $sales_code;?>">
 								</div>
-
 							</td>
 						</tr>
 					</tfoot>

@@ -33,6 +33,18 @@ $('#save,#update,#create').click(function (e) {
     }
 
 
+    if(!$("#payment_type").val().trim() ) //Also check Others????
+    {
+        $('#payment_type_msg').fadeIn(200).show().html('Required Field').addClass('required');
+        // $('#'+id).css({'background-color' : '#E8E2E9'});
+        flag=false;
+    }
+    else
+    {
+          $("#payment_type_msg").fadeOut(200).hide();
+          //$('#'+id).css({'background-color' : '#FFFFFF'});    //White color
+    }
+
    //Validate Input box or selection box should not be blank or empty
 	  check_field("customer_id");
     check_field("return_date");

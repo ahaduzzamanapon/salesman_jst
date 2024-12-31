@@ -78,6 +78,11 @@ class Sales_return extends MY_Controller {
 
 
 	public function edit($id){
+		// dd(base_url('sales_return'));
+
+		redirect('sales_return','refresh');
+		exit();
+
 		$this->permission_check('sales_return_edit');
 		$data=$this->data;
 		$data=array_merge($data,array('return_id'=>$id));

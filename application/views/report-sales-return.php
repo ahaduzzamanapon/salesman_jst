@@ -3,13 +3,13 @@
 <head>
 <!-- TABLES CSS CODE -->
 <?php include"comman/code_css_form.php"; ?>
-<!-- </copy> -->  
+<!-- </copy> -->
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
 
 
 <div class="wrapper">
- 
+
  <?php include"sidebar.php"; ?>
 
   <!-- Content Wrapper. Contains page content -->
@@ -43,14 +43,14 @@
               <div class="box-body">
         <div class="form-group">
         <label for="from_date" class="col-sm-2 control-label"><?= $this->lang->line('from_date'); ?></label>
-                 
+
           <div class="col-sm-3">
             <div class="input-group date">
               <div class="input-group-addon">
               <i class="fa fa-calendar"></i>
               </div>
               <input type="text" class="form-control pull-right datepicker" id="from_date" name="from_date" value="<?php echo show_date(date('d-m-Y'));?>" readonly>
-              
+
             </div>
             <span id="Sales_date_msg" style="display:none" class="text-danger"></span>
           </div>
@@ -61,12 +61,12 @@
               <i class="fa fa-calendar"></i>
               </div>
               <input type="text" class="form-control pull-right datepicker" id="to_date" name="to_date" value="<?php echo show_date(date('d-m-Y'))?>" readonly>
-              
+
             </div>
             <span id="Sales_date_msg" style="display:none" class="text-danger"></span>
           </div>
-        
-                </div> 
+
+                </div>
                 <div class="form-group">
           <label for="customer_id" class="col-sm-2 control-label"><?= $this->lang->line('customer_name'); ?></label>
 
@@ -92,11 +92,11 @@
                   </select>
           <span id="customer_id_msg" style="display:none" class="text-danger"></span>
                   </div>
-          
+
                 </div>
               </div>
               <!-- /.box-body -->
-        
+
               <div class="box-footer">
                 <div class="col-sm-8 col-sm-offset-2 text-center">
                    <div class="col-md-3 col-md-offset-3">
@@ -111,11 +111,11 @@
              </div>
              <!-- /.box-footer -->
 
-             
+
             </form>
           </div>
           <!-- /.box -->
-          
+
         </div>
         <!--/.col (right) -->
       </div>
@@ -126,7 +126,7 @@
       <div class="row">
         <!-- right column -->
         <div class="col-md-12">
-         
+
           <div class="box">
             <div class="box-header">
               <h3 class="box-title"><?= $this->lang->line('records_table'); ?></h3>
@@ -134,7 +134,7 @@
             </div>
             <!-- /.box-header -->
             <div class="box-body table-responsive no-padding">
-              
+
               <table class="table table-bordered table-hover " id="report-data" >
                 <thead>
                 <tr>
@@ -150,11 +150,11 @@
                 </tr>
                 </thead>
                 <tbody id="tbodyid">
-                
+
               </tbody>
               </table>
-              
-              
+
+
             </div>
             <!-- /.box-body -->
           </div>
@@ -164,10 +164,10 @@
     </section>
   </div>
   <!-- /.content-wrapper -->
-  
+
  <?php include"footer.php"; ?>
 
- 
+
   <!-- Add the sidebar's background. This div must be placed
        immediately after the control sidebar -->
   <div class="control-sidebar-bg"></div>
@@ -197,7 +197,7 @@ $(".btnExport").click(function(event) {
 
 <!-- Make sidebar menu hughlighter/selector -->
 <script>$(".<?php echo basename(__FILE__,'.php');?>-active-li").addClass("active");</script>
-    
-    
+
+
 </body>
 </html>

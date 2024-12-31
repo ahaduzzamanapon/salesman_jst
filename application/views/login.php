@@ -22,7 +22,9 @@
 
 <body class="hold-transition login-page" style="height: 100vh; background: url('<?php echo base_url('uploads/bg/pos-background.jpeg') ?>') center center / cover no-repeat; width: 100vw; max-height: 74vh;">
   <?php
-  //Find Logo Path
+  //Find Logo Pat
+  // Set max_allowed_packet to 64M for the current session
+
     $logo=$this->db->query("select logo from db_sitesettings")->row()->logo;
   ?>
 <div class="login-box">

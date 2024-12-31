@@ -253,8 +253,8 @@
                                                 <th rowspan='2' style="width:15%"><?= $this->lang->line('item_name'); ?></th>
                                                 <th rowspan='2' style="width:10%"><?= $this->lang->line('quantity'); ?></th>
                                                 <th rowspan='2' style="width:10%"><?= $this->lang->line('unit_price'); ?></th>
-                                                <th rowspan='2' style="width:10%">Discount</th>
                                                 <th rowspan='2' style="width:10%">Vat</th>
+                                                <th rowspan='2' style="width:10%">Discount</th>
                                                 <th rowspan='2' style="width:7.5%"><?= $this->lang->line('total_amount'); ?></th>
                                                 <th rowspan='2' style="width:7.5%"><?= $this->lang->line('action'); ?></th>
                                              </tr>
@@ -369,11 +369,11 @@
                                              <div class="col-md-6">
                                                 <div class="">
                                                    <label for="payment_type"><?= $this->lang->line('payment_type'); ?></label>
-                                                   <select class="form-control select2" id='payment_type' name="payment_type">
+                                                   <select class="form-control select2" id='payment_type' name="payment_type" required>
                                                    <?php
                                                       $q1=$this->db->query("select * from db_paymenttypes where status=1");
                                                       if($q1->num_rows()>0){
-                                                         echo "<option value=''>-Select-</option>";
+                                                         echo "<option value='' >-Select-</option>";
                                                             foreach($q1->result() as $res1){
                                                             echo "<option value='".$res1->payment_type."'>".$res1->payment_type ."</option>";
                                                          }
