@@ -350,4 +350,14 @@ class Items extends MY_Controller {
 		<?php }
 		echo $html;
 	}
+
+	public function get_sub_category(){
+		$category_id = $this->input->post('category_id');
+		$sub_category = $this->db->get_where('db_sub_cat', ['category_id' => $category_id])->result();
+		$html = '<option value="">Select Sub Category</option>';
+		foreach ($sub_category as $row) {
+			$html .= '<option value="' . $row->id . '">' . $row->sub_category_name . '</option>';
+		}
+		echo $html;
+	}
 }

@@ -177,6 +177,7 @@ class Items_model extends CI_Model {
 		    'item_code' => $item_code,
 		    'item_name' => $item_name,
 		    'category_id' => $category_id,
+		    'sub_category_id' => $sub_category_id,
 		    'company_id' => $company_id,
 		    'brand_id' => $brand_id,
 		    'unit_id' => $unit_id,
@@ -252,6 +253,7 @@ class Items_model extends CI_Model {
 			$data['company_id']=$query->company_id;
 			$data['brand_id']=$query->brand_id;
 			$data['category_id']=$query->category_id;
+			$data['sub_category_id']=$query->sub_category_id;
 			$data['sku']=$query->sku;
 			$data['unit_id']=$query->unit_id;
 			$data['alert_qty']=$query->alert_qty;
@@ -330,6 +332,7 @@ class Items_model extends CI_Model {
 						company_id='$company_id',
 						brand_id='$brand_id',
 						category_id='$category_id',
+						sub_category_id='$sub_category_id',
 						discount_type='$discount_type',
 						discount='$discount',
 						sku='$sku',

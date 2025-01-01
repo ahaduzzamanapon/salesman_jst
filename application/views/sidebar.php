@@ -97,9 +97,9 @@
           </li>
 
           <?php if($CI->permissions('sales_add')) { ?>
-          <li class="text-center" id="">
-            <a title="POS" href="<?php echo $base_url; ?>pos"><i class="fa fa-plus-square " ></i> POS </a>
-          </li>
+          <!-- <li class="text-center" id="">
+            <a title="POS" href="<?php // echo $base_url; ?>pos"><i class="fa fa-plus-square " ></i> POS </a>
+          </li> -->
           <?php } ?>
 
           <li class="text-center hidden-xs" id="">
@@ -115,7 +115,6 @@
               <!-- User image -->
               <li class="user-header">
                 <img src="<?php echo $theme_link; ?>dist/img/avatar5.png" class="img-circle" alt="User Image">
-
                 <p>
                  <?php print ucfirst($this->session->userdata('inv_username')); ?>
                   <small>Year <?=date("Y");?></small>
@@ -167,8 +166,8 @@
             </a>
             <ul class="treeview-menu">
               <?php if($CI->permissions('sales_add')) { ?>
-                <li class="pos-active-li"><a href="<?php echo $base_url; ?>pos"><i class="fa fa-calculator "></i> <span>POS</span></a></li>
-                <!-- <li class="sales-active-li"><a href="<?php echo $base_url; ?>sales/add"><i class="fa fa-plus-square-o "></i> <span><?= $this->lang->line('new_sales'); ?></span></a></li> -->
+                <!-- <li class="pos-active-li"><a href="<?php //echo $base_url; ?>pos"><i class="fa fa-calculator "></i> <span>POS</span></a></li> -->
+                <li class="sales-active-li"><a href="<?php echo $base_url; ?>sales/add"><i class="fa fa-plus-square-o "></i> <span><?= $this->lang->line('new_sales'); ?></span></a></li>
               <?php } ?>
 
               <?php if($CI->permissions('sales_view')) { ?>

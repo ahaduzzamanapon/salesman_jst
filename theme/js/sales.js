@@ -352,6 +352,23 @@ function pay_now(sales_id){
 
   });
 }
+
+
+function supply_now(sales_id){
+  $.post('sales/show_supply_now_modal', {sales_id: sales_id}, function(result) {
+    $(".pay_now_modal").html('').html(result);
+    //Date picker
+    $('.datepicker').datepicker({
+      autoclose: true,
+    format: 'dd-mm-yyyy',
+     todayHighlight: true
+    });
+    $('#supply_now').modal('toggle');
+  });
+}
+
+
+
 function view_payments(sales_id){
   $.post('sales/view_payments_modal', {sales_id: sales_id}, function(result) {
     $(".view_payments_modal").html('').html(result);

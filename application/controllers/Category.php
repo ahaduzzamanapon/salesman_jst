@@ -139,5 +139,39 @@ class Category extends MY_Controller {
 		return $this->category->delete_categories_from_table($ids);
 	}
 
+	public function sub_category(){
+		$data=$this->data;
+		$data['page_title']='Sub Category';
+		$data['category']=$this->db->get('db_category')->result();
+		$data['sub_category']=$this->db->select('db_sub_cat.*,db_category.category_name')->from('db_sub_cat')->join('db_category','db_category.id=db_sub_cat.category_id')->get()->result();
+		$this->load->view('sub_category', $data);
+	}
+	public function sub_category_save(){
+			$data=array(
+				'category_id'=>$this->input->post('category_id'),
+				'sub_category_name'=>$this->input->post('sub_category_name'),
+				'description'=>$this->input->post('description'),
+			);
+			if ($this->input->post('sub_category_id') && $this->input->post('sub_category_id')!='') {
+				$id=$this->input->post('sub_category_id');
+				$this->db->where('id',$id);
+				$this->db->update('db_sub_cat',$data);
+				echo "Sub Category Updated Successfully";
+				exit();
+			}else{
+				$this->db->insert('db_sub_cat',$data);
+				echo "Sub Category Added Successfully";
+				exit();
+			}
+	}
+	public function sub_category_update(){
+		$id=$this->input->post('id');
+		$data=$this->db->select('db_sub_cat.*,db_category.category_name')->from('db_sub_cat')->join('db_category','db_category.id=db_sub_cat.category_id')->where('db_sub_cat.id',$id)->get()->row();
+		echo json_encode($data);
+	}
+		
+
+
+
 }
 

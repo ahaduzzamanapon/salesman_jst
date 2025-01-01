@@ -59,6 +59,7 @@ class Sales extends MY_Controller {
 		$no = $_POST['start'];
 		foreach ($list as $sales) {
 
+
 			$no++;
 			$row = array();
 			$row[] = '<input type="checkbox" name="checkbox[]" value='.$sales->id.' class="checkbox column_checkbox" >';
@@ -82,6 +83,7 @@ class Sales extends MY_Controller {
 			          $str="<span class='label label-success' style='cursor:pointer'> Paid </span>";
 
 			$row[] = $str;
+			$row[] = $sales->supply_status;
 			$row[] = ucfirst($sales->created_by);
 
 					 if($sales->pos ==1):
@@ -120,6 +122,20 @@ class Sales extends MY_Controller {
 											$str2.='<li>
 												<a title="Pay" class="pointer" onclick="pay_now('.$sales->id.')" >
 													<i class="fa fa-fw fa-hourglass-half text-blue"></i>Pay Now
+												</a>
+											</li>';
+
+											if($this->permissions('sales_payment_add') && $sales->supply_status!='Supplied')
+											$str2.='<li>
+												<a title="Supply" class="pointer" onclick="supply_now('.$sales->id.')" >
+													<i class="fa fa-fw fa-hourglass-half text-blue"></i>Supply Now
+												</a>
+											</li>';
+
+											if($this->permissions('sales_payment_add'))
+											$str2.='<li>
+												<a title="Supply List" class="pointer" href="sales/supply_list/'.$sales->id.'" >
+													<i class="fa fa-fw fa-hourglass-half text-blue"></i>Supply list
 												</a>
 											</li>';
 
@@ -282,6 +298,64 @@ class Sales extends MY_Controller {
 	}
 
 
+	public function supply_now(){
+		$supply_status='Pending';
+		$supply_uniq_id ="Sup".date('YmdHis');
+		foreach ($_GET['sales_item_id'] as $key => $value) {
+			$data= array(
+				'supply_uniq_id' => $supply_uniq_id,
+				'db_sales_id' => $_GET['sales_id'],
+				'db_salesitems_id' => $_GET['sales_item_id'][$key],
+				'item_id' => $_GET['item_id'][$key],
+				'supply_qty' => $_GET['supply_qty'][$key],
+				'supply_date' => date('Y-m-d'),
+				'note' => $_GET['supply_note'],
+			);
+			$this->db->insert('db_sale_supply_item', $data);
+			$this->load->model('pos_model');
+			$this->pos_model->update_items_quantity($_GET['item_id'][$key]);
+
+			$this->db->where('id', $_GET['sales_item_id'][$key]);
+			$db_salesitems = $this->db->get('db_salesitems')->row();
+			$total_supply= $db_salesitems->total_supply + $_GET['supply_qty'][$key];
+			$this->db->where('id', $_GET['sales_item_id'][$key]);
+			$this->db->update('db_salesitems', array('total_supply' => $total_supply));
+
+			if ($db_salesitems->sales_qty == $total_supply) {
+				$this->db->where('id', $_GET['sales_item_id'][$key]);
+				$this->db->update('db_salesitems', array('supply_status' => 'Supplied'));
+				if ($supply_status != 'Partially') {
+					$supply_status='Supplied';
+				}
+			}else{
+				$this->db->where('id', $_GET['sales_item_id'][$key]);
+				$this->db->update('db_salesitems', array('supply_status' => 'Partially'));
+			}
+		};
+
+		$this->db->where('id', $_GET['sales_id']);
+		$this->db->update('db_sales', array('supply_status' => $supply_status));
+
+
+		if ($_GET['is_payment'] == 'payment') {
+			$this->sales->save_payment();
+			$payment_id = $this->db->select('id')->order_by('id', 'desc')->limit(1)->get('db_salespayments')->row()->id;
+			$this->db->where('db_sales_id', $_GET['sales_id']);
+			$this->db->update('db_sale_supply_item', array('supply_payment_id' => $payment_id));
+		}
+		$this->session->set_flashdata('success', 'Success!! Record Saved Successfully! ');
+		redirect('sales');
+	}
+
+
+	public function supply_list($sales_id){
+		$data=$this->data;
+		$data['sales_id']=$sales_id;
+		$data['page_title']='Supply list';
+		$this->load->view('supply-list',$data);
+	}
+
+
 
 
 	/*v1.1*/
@@ -301,6 +375,11 @@ class Sales extends MY_Controller {
 		$sales_id=$this->input->post('sales_id');
 		echo $this->sales->show_pay_now_modal($sales_id);
 	}
+	public function show_supply_now_modal(){
+		$this->permission_check_with_msg('sales_view');
+		$sales_id=$this->input->post('sales_id');
+		echo $this->sales->show_supply_now_modal($sales_id);
+	}
 	public function save_payment(){
 		$this->permission_check_with_msg('sales_add');
 		echo $this->sales->save_payment();
@@ -309,5 +388,12 @@ class Sales extends MY_Controller {
 		$this->permission_check_with_msg('sales_view');
 		$sales_id=$this->input->post('sales_id');
 		echo $this->sales->view_payments_modal($sales_id);
+	}
+	public function supply_view($supply_uniq_id){
+		$data=$this->data;
+		$data['supply_uniq_id']=$supply_uniq_id;
+		
+		$data['page_title']='Supply view';
+		$this->load->view('supply-view',$data);
 	}
 }

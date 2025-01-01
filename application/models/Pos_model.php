@@ -93,268 +93,268 @@ class Pos_model extends CI_Model {
 	}
 
 	//Save Sales
-	public function pos_save_update(){//Save or update sales
-		$this->db->trans_begin();
-		extract($this->xss_html_filter(array_merge($this->data,$_POST,$_GET)));
-		//print_r($this->xss_html_filter(array_merge($this->data,$_POST,$_GET)));exit();
-		//dd($_POST);
+	// public function pos_save_update(){//Save or update sales
+	// 	$this->db->trans_begin();
+	// 	extract($this->xss_html_filter(array_merge($this->data,$_POST,$_GET)));
+	// 	//print_r($this->xss_html_filter(array_merge($this->data,$_POST,$_GET)));exit();
+	// 	//dd($_POST);
 
-		//check payment method
-		if(isset($by_cash) && $by_cash==true){ //by cash payment
-			$by_cash=true;
-			$payment_row_count=1;
-		}else{ //by multiple payments
-			$by_cash=false;
-		}
-		//end
+	// 	//check payment method
+	// 	if(isset($by_cash) && $by_cash==true){ //by cash payment
+	// 		$by_cash=true;
+	// 		$payment_row_count=1;
+	// 	}else{ //by multiple payments
+	// 		$by_cash=false;
+	// 	}
+	// 	//end
 
-		$rowcount 			=$hidden_rowcount;
-		$sales_date 		=date("Y-m-d",strtotime($CUR_DATE));
-		$points 			= (empty($points_use)) ? 'NULL' : $points_use;
-		$discount_input 	= (empty($discount_input)) ? 'NULL' : $discount_input;
-		$tot_disc 		= (empty($tot_disc) || $tot_disc==0) ? '0' : $tot_disc;
-		$tot_grand 		= (empty($tot_grand)) ? '0' : $tot_grand;
-		//$tot_grand		=round($tot_amt);
-		$round_off = number_format($tot_grand-$tot_amt,2,'.','');
-
-
-		//FIND CUSTOMER INFORMATION BY ITS ID
-		$q1=$this->db->query("select customer_name,mobile from db_customers where id=$customer_id");
-		$customer_name 	= $q1->row()->customer_name;
-		$mobile 		= $q1->row()->mobile;
+	// 	$rowcount 			=$hidden_rowcount;
+	// 	$sales_date 		=date("Y-m-d",strtotime($CUR_DATE));
+	// 	$points 			= (empty($points_use)) ? 'NULL' : $points_use;
+	// 	$discount_input 	= (empty($discount_input)) ? 'NULL' : $discount_input;
+	// 	$tot_disc 		= (empty($tot_disc) || $tot_disc==0) ? '0' : $tot_disc;
+	// 	$tot_grand 		= (empty($tot_grand)) ? '0' : $tot_grand;
+	// 	//$tot_grand		=round($tot_amt);
+	// 	$round_off = number_format($tot_grand-$tot_amt,2,'.','');
 
 
-		if($command=='update'){
-			$this->session->set_flashdata('success', 'Success!! Sales Created Successfully!'.$sms_info);
-			return "success<<<###>>>$sales_id";
-			exit();
-
-			$sales_entry = array(
-						'sales_date' 				=> $sales_date,
-						'sales_status' 				=> 'Final',
-						'customer_id' 				=> $customer_id,
-						/*'warehouse_id' 				=> $warehouse_id,*/
-						/*Discount*/
-						'discount_to_all_input' 	=> $discount_input,
-						'discount_to_all_type' 		=> $discount_type,
-						'tot_discount_to_all_amt' 	=> $tot_disc,
-						/*Subtotal & Total */
-						'subtotal' 					=> $tot_amt,
-						'round_off' 				=> $round_off,
-						'grand_total' 				=> $tot_grand,
-					);
-
-			$q3 = $this->db->where('id',$sales_id)->update('db_sales', $sales_entry);
-
-			$q11=$this->db->query("delete from db_salesitems where sales_id='$sales_id'");
-			$q12=$this->db->query("delete from db_salespayments where sales_id='$sales_id'");
-			if(!$q11 || !$q12){
-				return "failed";
-			}
-		} else{
-			//GET SALES INITIAL
-			$q5=$this->db->query("select sales_init from db_company where id=1");
-			$init=$q5->row()->sales_init;
+	// 	//FIND CUSTOMER INFORMATION BY ITS ID
+	// 	$q1=$this->db->query("select customer_name,mobile from db_customers where id=$customer_id");
+	// 	$customer_name 	= $q1->row()->customer_name;
+	// 	$mobile 		= $q1->row()->mobile;
 
 
-			//ORDER SALES CREATION
-			$maxid=$this->db->query("SELECT COALESCE(MAX(id),0)+1 AS maxid FROM db_sales")->row()->maxid;
-			$sales_code=$init.str_pad($maxid, 10, '0', STR_PAD_LEFT);
+	// 	if($command=='update'){
+	// 		$this->session->set_flashdata('success', 'Success!! Sales Created Successfully!'.$sms_info);
+	// 		return "success<<<###>>>$sales_id";
+	// 		exit();
 
-			$sales_entry = array(
-		    				'sales_code' 				=> $sales_code,
-		    				'sales_date' 				=> $sales_date,
-		    				'sales_status' 				=> 'Final',
-		    				'customer_id' 				=> $customer_id,
-		    				/*'warehouse_id' 				=> $warehouse_id,*/
-		    				/*Discount*/
-		    				'discount_to_all_input' 	=> $discount_input,
-		    				'discount_to_all_type' 		=> $discount_type,
-		    				'tot_discount_to_all_amt' 	=> $tot_disc,
-		    				/*Subtotal & Total */
-		    				'subtotal' 					=> $tot_amt,
-		    				'round_off' 				=> $round_off,
-		    				'grand_total' 				=> $tot_grand,
-		    				/*System Info*/
-		    				'created_date' 				=> $CUR_DATE,
-		    				'created_time' 				=> $CUR_TIME,
-		    				'created_by' 				=> $CUR_USERNAME,
-		    				'system_ip' 				=> $SYSTEM_IP,
-		    				'system_name' 				=> $SYSTEM_NAME,
-		    				'pos' 						=> 1,
-		    				'status' 					=> 1,
-		    			);
+	// 		$sales_entry = array(
+	// 					'sales_date' 				=> $sales_date,
+	// 					'sales_status' 				=> 'Final',
+	// 					'customer_id' 				=> $customer_id,
+	// 					/*'warehouse_id' 				=> $warehouse_id,*/
+	// 					/*Discount*/
+	// 					'discount_to_all_input' 	=> $discount_input,
+	// 					'discount_to_all_type' 		=> $discount_type,
+	// 					'tot_discount_to_all_amt' 	=> $tot_disc,
+	// 					/*Subtotal & Total */
+	// 					'subtotal' 					=> $tot_amt,
+	// 					'round_off' 				=> $round_off,
+	// 					'grand_total' 				=> $tot_grand,
+	// 				);
 
-			$q3 = $this->db->insert('db_sales', $sales_entry);
-			$sales_id = $this->db->insert_id();
-		}
-		//Import post data from form
-		// cal additional discount of each item
-		$add_dis_one = $tot_disc / $tot_amt;
-		for($i=0;$i<$rowcount;$i++){
+	// 		$q3 = $this->db->where('id',$sales_id)->update('db_sales', $sales_entry);
 
-			if(isset($_REQUEST['tr_item_id_'.$i]) && trim($_REQUEST['tr_item_id_'.$i])!=''){
-
-				//RECEIVE VALUES FROM FORM
-				$item_id 	=$this->xss_html_filter(trim($_REQUEST['tr_item_id_'.$i]));
-				$sales_qty 	=$this->xss_html_filter(trim($_REQUEST['item_qty_'.$item_id]));
-				$price_per_unit =$this->xss_html_filter(trim($_REQUEST['sales_price_'.$i]));
-				$dis_per_qty =$this->xss_html_filter(trim($_REQUEST['dis_hide_'.$item_id]));
-				$dis_too = $dis_per_qty * $sales_qty;
-
-				//Find item ID
-				$q4=$this->db->query("select sales_price,tax_id from db_items where id=$item_id");
-				//$price_per_unit=$q4->row()->sales_price;
-				$tax_id = (empty($q4->row()->tax_id)) ? 'NULL' : $q4->row()->tax_id;
-				//end
-
-				//total of sales price of each item
-				$unit_total_cost = $price_per_unit;
-				$total_cost = $price_per_unit * $sales_qty;
-				//end
-				// shahajahan
-				$mr_price   = $this->xss_html_filter(trim($_REQUEST['mrp_hide_'.$item_id]));
-				// $item_adis  =$this->xss_html_filter(trim($_REQUEST['item_adis_'.$item_id]));
-				// shahajahan
-
-				$tax_d =$this->db->select('*')->from('db_items')->where('id',$item_id)->get()->row();
-				$tax_type = $tax_d->tax_type;
-
-				$unit_tax = 0;
-				$tax_amt = $tax_d->vat_amt*$sales_qty;
-				// if(!empty($tax_id) && $tax_id!=0){
-				// 	//each unit tax amt
-				// 	$unit_tax =$this->db->select('tax')->from('db_tax')->where('id',$tax_id)->get()->row()->tax;
-				// 	$tax_amt = (($unit_tax * $price_per_unit)/100)*$sales_qty;
-				// 	// if($tax_type=='Exclusive'){
-				// 	// 	//$total_cost+=$tax_amt;
-				// 	// }else{//Inclusive
-				// 	// 	$unit_tax =$this->db->select('tax')->from('db_tax')->where('id',$tax_id)->get()->row()->tax;
-				// 	// 	$tax_amt = $this->inclusive($price_per_unit,$unit_tax);
-				// 	// }
-				// }
-				//dd($price_per_unit);
+	// 		$q11=$this->db->query("delete from db_salesitems where sales_id='$sales_id'");
+	// 		$q12=$this->db->query("delete from db_salespayments where sales_id='$sales_id'");
+	// 		if(!$q11 || !$q12){
+	// 			return "failed";
+	// 		}
+	// 	} else{
+	// 		//GET SALES INITIAL
+	// 		$q5=$this->db->query("select sales_init from db_company where id=1");
+	// 		$init=$q5->row()->sales_init;
 
 
-				if($tax_amt=='' || $tax_amt==0){
-					$tax_amt = 0;
-				}
-				if($total_cost=='' || $total_cost==0){$total_cost=0;}
-				/* ******************************** */
+	// 		//ORDER SALES CREATION
+	// 		$maxid=$this->db->query("SELECT COALESCE(MAX(id),0)+1 AS maxid FROM db_sales")->row()->maxid;
+	// 		$sales_code=$init.str_pad($maxid, 10, '0', STR_PAD_LEFT);
 
-				$add_dis = round(($add_dis_one * $price_per_unit * $sales_qty),2);
-				$aaadis = $add_dis_one * $price_per_unit;
-				$salesitems_entry = array(
-		    				'sales_id' 			=> $sales_id,
-		    				'sales_status'		=> 'Final',
-		    				'item_id' 			=> $item_id,
-		    				'sales_qty' 		=> $sales_qty,
-		    				'mr_price' 			=> ($mr_price) ? $mr_price : 0,
-		    				'price_per_unit' 	=> $price_per_unit,
-		    				'tax_id' 			=> $tax_id,
-		    				'vat_unit' 			=> $tax_d->vat_amt,
-		    				'tax_amt' 			=> $tax_amt,
-		    				'unit_discount_per' => $dis_per_qty,
-		    				'discount_amt' 		=> $dis_too,
-		    				'additional_dis'    => $aaadis, //Additional Discount per unit
-		    				'add_dis_tot'    	=> $add_dis, //Additional Discount total
-		    				'unit_total_cost' 	=> $price_per_unit,
-		    				'total_cost' 		=> $total_cost,
-		    				'status'	 		=> 1,
-		    			);
-						//dd($salesitems_entry);
-				$q4 = $this->db->insert('db_salesitems', $salesitems_entry);
+	// 		$sales_entry = array(
+	// 	    				'sales_code' 				=> $sales_code,
+	// 	    				'sales_date' 				=> $sales_date,
+	// 	    				'sales_status' 				=> 'Final',
+	// 	    				'customer_id' 				=> $customer_id,
+	// 	    				/*'warehouse_id' 				=> $warehouse_id,*/
+	// 	    				/*Discount*/
+	// 	    				'discount_to_all_input' 	=> $discount_input,
+	// 	    				'discount_to_all_type' 		=> $discount_type,
+	// 	    				'tot_discount_to_all_amt' 	=> $tot_disc,
+	// 	    				/*Subtotal & Total */
+	// 	    				'subtotal' 					=> $tot_amt,
+	// 	    				'round_off' 				=> $round_off,
+	// 	    				'grand_total' 				=> $tot_grand,
+	// 	    				/*System Info*/
+	// 	    				'created_date' 				=> $CUR_DATE,
+	// 	    				'created_time' 				=> $CUR_TIME,
+	// 	    				'created_by' 				=> $CUR_USERNAME,
+	// 	    				'system_ip' 				=> $SYSTEM_IP,
+	// 	    				'system_name' 				=> $SYSTEM_NAME,
+	// 	    				'pos' 						=> 1,
+	// 	    				'status' 					=> 1,
+	// 	    			);
 
-				$q11=$this->update_items_quantity($item_id);
-				if(!$q11){
-					return "failed";
-				}
+	// 		$q3 = $this->db->insert('db_sales', $sales_entry);
+	// 		$sales_id = $this->db->insert_id();
+	// 	}
+	// 	//Import post data from form
+	// 	// cal additional discount of each item
+	// 	$add_dis_one = $tot_disc / $tot_amt;
+	// 	for($i=0;$i<$rowcount;$i++){
 
-			}
+	// 		if(isset($_REQUEST['tr_item_id_'.$i]) && trim($_REQUEST['tr_item_id_'.$i])!=''){
 
-		}//for end
+	// 			//RECEIVE VALUES FROM FORM
+	// 			$item_id 	=$this->xss_html_filter(trim($_REQUEST['tr_item_id_'.$i]));
+	// 			$sales_qty 	=$this->xss_html_filter(trim($_REQUEST['item_qty_'.$item_id]));
+	// 			$price_per_unit =$this->xss_html_filter(trim($_REQUEST['sales_price_'.$i]));
+	// 			$dis_per_qty =$this->xss_html_filter(trim($_REQUEST['dis_hide_'.$item_id]));
+	// 			$dis_too = $dis_per_qty * $sales_qty;
 
-		//UPDATE CUSTMER MULTPLE PAYMENTS
-		for($i=1;$i<=$payment_row_count;$i++){
+	// 			//Find item ID
+	// 			$q4=$this->db->query("select sales_price,tax_id from db_items where id=$item_id");
+	// 			//$price_per_unit=$q4->row()->sales_price;
+	// 			$tax_id = (empty($q4->row()->tax_id)) ? 'NULL' : $q4->row()->tax_id;
+	// 			//end
 
-			if((isset($_REQUEST['amount_'.$i]) && trim($_REQUEST['amount_'.$i])!='') || ($by_cash==true)){
+	// 			//total of sales price of each item
+	// 			$unit_total_cost = $price_per_unit;
+	// 			$total_cost = $price_per_unit * $sales_qty;
+	// 			//end
+	// 			// shahajahan
+	// 			$mr_price   = $this->xss_html_filter(trim($_REQUEST['mrp_hide_'.$item_id]));
+	// 			// $item_adis  =$this->xss_html_filter(trim($_REQUEST['item_adis_'.$item_id]));
+	// 			// shahajahan
 
-				if($by_cash==true){
-					//RECEIVE VALUES FROM FORM
-					$amount 		=$tot_grand;
-					$payment_type 	='Cash';
-					$payment_note 	='Paid By Cash';
-				}else{
-					//RECEIVE VALUES FROM FORM
-					$amount 		=$this->xss_html_filter(trim($_REQUEST['amount_'.$i]));
-					$payment_type 	=$this->xss_html_filter(trim($_REQUEST['payment_type_'.$i]));
-					$payment_note 	=$this->xss_html_filter(trim($_REQUEST['payment_note_'.$i]));
-				}
+	// 			$tax_d =$this->db->select('*')->from('db_items')->where('id',$item_id)->get()->row();
+	// 			$tax_type = $tax_d->tax_type;
 
-				//If amount is greater than paid amount
-				$change_return=0;
-				if($amount>$tot_grand){
-					$change_return =$amount-$tot_grand;
-					$amount =$tot_grand;
-				}
-				//end
-
-				$salespayments_entry = array(
-					'sales_id' 		=> $sales_id,
-					'payment_date'		=> $sales_date,//Current Payment with sales entry
-					'payment_type' 		=> $payment_type,
-					'payment' 			=> $amount,
-					'payment_note' 		=> $payment_note,
-					'created_date' 		=> $CUR_DATE,
-    				'created_time' 		=> $CUR_TIME,
-    				'created_by' 		=> $CUR_USERNAME,
-    				'system_ip' 		=> $SYSTEM_IP,
-    				'system_name' 		=> $SYSTEM_NAME,
-    				'change_return' 	=> $change_return,
-    				'status' 			=> 1,
-				);
-
-			  $q7 = $this->db->insert('db_salespayments', $salespayments_entry);
-
-			    if(!$q7)
-				{
-					echo "q7\n";
-					return "failed";
-				}
-
-			}//if()
-
-		}//for end
+	// 			$unit_tax = 0;
+	// 			$tax_amt = $tax_d->vat_amt*$sales_qty;
+	// 			// if(!empty($tax_id) && $tax_id!=0){
+	// 			// 	//each unit tax amt
+	// 			// 	$unit_tax =$this->db->select('tax')->from('db_tax')->where('id',$tax_id)->get()->row()->tax;
+	// 			// 	$tax_amt = (($unit_tax * $price_per_unit)/100)*$sales_qty;
+	// 			// 	// if($tax_type=='Exclusive'){
+	// 			// 	// 	//$total_cost+=$tax_amt;
+	// 			// 	// }else{//Inclusive
+	// 			// 	// 	$unit_tax =$this->db->select('tax')->from('db_tax')->where('id',$tax_id)->get()->row()->tax;
+	// 			// 	// 	$tax_amt = $this->inclusive($price_per_unit,$unit_tax);
+	// 			// 	// }
+	// 			// }
+	// 			//dd($price_per_unit);
 
 
-		//UPDATE itemS QUANTITY IN itemS TABLE
-		$this->load->model('sales_model');
-		$q6=$this->sales_model->update_sales_payment_status($sales_id);
-		if(!$q6){
-			return "failed";
-		}
+	// 			if($tax_amt=='' || $tax_amt==0){
+	// 				$tax_amt = 0;
+	// 			}
+	// 			if($total_cost=='' || $total_cost==0){$total_cost=0;}
+	// 			/* ******************************** */
 
-		if(isset($hidden_invoice_id) && !empty($hidden_invoice_id)){
-			$q13=$this->hold_invoice_delete($hidden_invoice_id);
-			if(!$q13){
-				return "failed";
-			}
-		}
-		//COMMIT RECORD
-		$this->db->trans_commit();
+	// 			$add_dis = round(($add_dis_one * $price_per_unit * $sales_qty),2);
+	// 			$aaadis = $add_dis_one * $price_per_unit;
+	// 			$salesitems_entry = array(
+	// 	    				'sales_id' 			=> $sales_id,
+	// 	    				'sales_status'		=> 'Final',
+	// 	    				'item_id' 			=> $item_id,
+	// 	    				'sales_qty' 		=> $sales_qty,
+	// 	    				'mr_price' 			=> ($mr_price) ? $mr_price : 0,
+	// 	    				'price_per_unit' 	=> $price_per_unit,
+	// 	    				'tax_id' 			=> $tax_id,
+	// 	    				'vat_unit' 			=> $tax_d->vat_amt,
+	// 	    				'tax_amt' 			=> $tax_amt,
+	// 	    				'unit_discount_per' => $dis_per_qty,
+	// 	    				'discount_amt' 		=> $dis_too,
+	// 	    				'additional_dis'    => $aaadis, //Additional Discount per unit
+	// 	    				'add_dis_tot'    	=> $add_dis, //Additional Discount total
+	// 	    				'unit_total_cost' 	=> $price_per_unit,
+	// 	    				'total_cost' 		=> $total_cost,
+	// 	    				'status'	 		=> 1,
+	// 	    			);
+	// 					//dd($salesitems_entry);
+	// 			$q4 = $this->db->insert('db_salesitems', $salesitems_entry);
 
-		 $sms_info='';
-		/* if(isset($send_sms) && $customer_id!=1){
-			if(send_sms_using_template($sales_id,1)==true){
-				$sms_info = 'SMS Has been Sent!';
-			}else{
-				$sms_info = 'Failed to Send SMS';
-			}
-		} */
+	// 			$q11=$this->update_items_quantity($item_id);
+	// 			if(!$q11){
+	// 				return "failed";
+	// 			}
 
-		$this->session->set_flashdata('success', 'Success!! Sales Created Successfully!'.$sms_info);
-        return "success<<<###>>>$sales_id";
-	}
+	// 		}
+
+	// 	}//for end
+
+	// 	//UPDATE CUSTMER MULTPLE PAYMENTS
+	// 	for($i=1;$i<=$payment_row_count;$i++){
+
+	// 		if((isset($_REQUEST['amount_'.$i]) && trim($_REQUEST['amount_'.$i])!='') || ($by_cash==true)){
+
+	// 			if($by_cash==true){
+	// 				//RECEIVE VALUES FROM FORM
+	// 				$amount 		=$tot_grand;
+	// 				$payment_type 	='Cash';
+	// 				$payment_note 	='Paid By Cash';
+	// 			}else{
+	// 				//RECEIVE VALUES FROM FORM
+	// 				$amount 		=$this->xss_html_filter(trim($_REQUEST['amount_'.$i]));
+	// 				$payment_type 	=$this->xss_html_filter(trim($_REQUEST['payment_type_'.$i]));
+	// 				$payment_note 	=$this->xss_html_filter(trim($_REQUEST['payment_note_'.$i]));
+	// 			}
+
+	// 			//If amount is greater than paid amount
+	// 			$change_return=0;
+	// 			if($amount>$tot_grand){
+	// 				$change_return =$amount-$tot_grand;
+	// 				$amount =$tot_grand;
+	// 			}
+	// 			//end
+
+	// 			$salespayments_entry = array(
+	// 				'sales_id' 		=> $sales_id,
+	// 				'payment_date'		=> $sales_date,//Current Payment with sales entry
+	// 				'payment_type' 		=> $payment_type,
+	// 				'payment' 			=> $amount,
+	// 				'payment_note' 		=> $payment_note,
+	// 				'created_date' 		=> $CUR_DATE,
+    // 				'created_time' 		=> $CUR_TIME,
+    // 				'created_by' 		=> $CUR_USERNAME,
+    // 				'system_ip' 		=> $SYSTEM_IP,
+    // 				'system_name' 		=> $SYSTEM_NAME,
+    // 				'change_return' 	=> $change_return,
+    // 				'status' 			=> 1,
+	// 			);
+
+	// 		  $q7 = $this->db->insert('db_salespayments', $salespayments_entry);
+
+	// 		    if(!$q7)
+	// 			{
+	// 				echo "q7\n";
+	// 				return "failed";
+	// 			}
+
+	// 		}//if()
+
+	// 	}//for end
+
+
+	// 	//UPDATE itemS QUANTITY IN itemS TABLE
+	// 	$this->load->model('sales_model');
+	// 	$q6=$this->sales_model->update_sales_payment_status($sales_id);
+	// 	if(!$q6){
+	// 		return "failed";
+	// 	}
+
+	// 	if(isset($hidden_invoice_id) && !empty($hidden_invoice_id)){
+	// 		$q13=$this->hold_invoice_delete($hidden_invoice_id);
+	// 		if(!$q13){
+	// 			return "failed";
+	// 		}
+	// 	}
+	// 	//COMMIT RECORD
+	// 	$this->db->trans_commit();
+
+	// 	 $sms_info='';
+	// 	/* if(isset($send_sms) && $customer_id!=1){
+	// 		if(send_sms_using_template($sales_id,1)==true){
+	// 			$sms_info = 'SMS Has been Sent!';
+	// 		}else{
+	// 			$sms_info = 'Failed to Send SMS';
+	// 		}
+	// 	} */
+
+	// 	$this->session->set_flashdata('success', 'Success!! Sales Created Successfully!'.$sms_info);
+    //     return "success<<<###>>>$sales_id";
+	// }
 
 	public function update_items_quantity($item_id){
 		//UPDATE itemS QUANTITY IN itemS TABLE
@@ -364,7 +364,10 @@ class Pos_model extends CI_Model {
 		$q8=$this->db->query("select COALESCE(SUM(purchase_qty),0) as pu_tot_qty from db_purchaseitems where item_id='$item_id' and purchase_status='Received'");
 		$pu_tot_qty=$q8->row()->pu_tot_qty;
 
-		$q9=$this->db->query("select coalesce(SUM(sales_qty),0) as sl_tot_qty from db_salesitems where item_id='$item_id' and sales_status='Final'");
+		// $q9=$this->db->query("select coalesce(SUM(sales_qty),0) as sl_tot_qty from db_salesitems where item_id='$item_id' and sales_status='Final'");
+		// $sl_tot_qty=$q9->row()->sl_tot_qty;
+
+		$q9=$this->db->query("select coalesce(SUM(supply_qty),0) as sl_tot_qty from db_sale_supply_item where item_id='$item_id'");
 		$sl_tot_qty=$q9->row()->sl_tot_qty;
 
 		/*Fid Return Items Count*/

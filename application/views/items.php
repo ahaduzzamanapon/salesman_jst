@@ -10,7 +10,7 @@
       <?php include"sidebar.php"; ?>
       <?php
          if(!isset($item_name)){
-         $item_name=$sku=$opening_stock=$item_code=$brand_id=$category_id=$gst_percentage=$tax_type=
+         $item_name=$sku=$opening_stock=$item_code=$brand_id=$category_id=$sub_category_id=$gst_percentage=$tax_type=
          $sales_price=$purchase_price=$profit_margin=$unit_id=$price=$alert_qty=$lot_number="";
          $stock = 0;
          $expire_date ='';
@@ -64,7 +64,7 @@
                               </div>
                               <div class="form-group col-md-3">
                                  <label for="category_id">Category <span class="text-danger">*</span></label>
-                                 <select class="form-control select2" id="category_id" name="category_id"  style="width: 100%;"  value="<?php print $category_id; ?>">
+                                 <select onchange="get_sub_category()" class="form-control select2" id="category_id" name="category_id"  style="width: 100%;"  value="<?php print $category_id; ?>">
                                     <?php
                                        $query1="select * from db_category where status=1";
                                        $q1=$this->db->query($query1);
@@ -85,6 +85,12 @@
                                        ?>
                                  </select>
                                  <span id="category_id_msg" style="display:none" class="text-danger"></span>
+                              </div>
+                              <div class="form-group col-md-3">
+                                 <label for="sub_category_id">Sub Category <span class="text-danger">*</span></label>
+                                 <select class="form-control select2" id="sub_category_id" name="sub_category_id"  style="width: 100%;">
+                                   
+                                 </select>
                               </div>
                               <div class="form-group col-md-3">
                                  <label>Barcode Type <span class="text-danger">*</span></label>
@@ -438,6 +444,23 @@
                itemCodeElement.readOnly = true;
                itemCodeElement.value = barcode;
             }
+         }
+      </script>
+
+      <script>
+         $(document).ready(function() {
+            get_sub_category();
+            
+         })
+         function get_sub_category(){
+            var category_id = $('#category_id').val();
+            $.post('<?php echo base_url(); ?>items/get_sub_category', {category_id:category_id}, function(result) {
+               $('#sub_category_id').html(result);
+               var sub_cat= <?= $sub_category_id; ?>;
+               if(sub_cat != ""){
+                  $('#sub_category_id').val(sub_cat).trigger('change');
+               }
+            });
          }
       </script>
    </body>

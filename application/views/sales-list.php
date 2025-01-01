@@ -143,6 +143,7 @@
                   <th><?= $this->lang->line('total'); ?></th>
                   <th><?= $this->lang->line('paid_amount'); ?></th>
                   <th><?= $this->lang->line('payment_status'); ?></th>
+                  <th>Supply Status</th>
                   <th><?= $this->lang->line('created_by'); ?></th>
                   <th><?= $this->lang->line('action'); ?></th>
                 </tr>
@@ -263,6 +264,24 @@ $(document).ready(function() {
 </script>
 <!-- Make sidebar menu hughlighter/selector -->
 <script>$(".<?php echo basename(__FILE__,'.php');?>-active-li").addClass("active");</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 </body>
 </html>
