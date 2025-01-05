@@ -1188,7 +1188,10 @@ class Sales_model extends CI_Model {
 											echo "<td>".$res1->payment_note."</td>";
 											echo "<td>".ucfirst($res1->created_by)."</td>";
 
-											echo "<td><a onclick='delete_sales_payment(".$res1->id.")' class='pointer btn  btn-danger' ><i class='fa fa-trash'></i></</td>";
+											echo "<td>
+											<a onclick='delete_sales_payment(".$res1->id.")' class='pointer btn  btn-danger' ><i class='fa fa-trash'></i></a>
+											<a  href='".base_url('sales/many_recept/'.$res1->id)."' class='pointer btn  btn-info' ><i class='fa fa-info'></i>Payment recept</a>
+											</td>";
 											echo "</tr>";
 										}
 									}

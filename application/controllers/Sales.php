@@ -389,11 +389,24 @@ class Sales extends MY_Controller {
 		$sales_id=$this->input->post('sales_id');
 		echo $this->sales->view_payments_modal($sales_id);
 	}
-	public function supply_view($supply_uniq_id){
+	public function supply_view($supply_uniq_id,$sales_id){
 		$data=$this->data;
 		$data['supply_uniq_id']=$supply_uniq_id;
-		
+		$data['sales_id']=$sales_id;
 		$data['page_title']='Supply view';
 		$this->load->view('supply-view',$data);
+	}
+	public function supply_chalan($supply_uniq_id,$sales_id){
+		$data=$this->data;
+		$data['supply_uniq_id']=$supply_uniq_id;
+		$data['sales_id']=$sales_id;
+		$data['page_title']='Supply view';
+		$this->load->view('supply-chalan',$data);
+	}
+	public function many_recept($payment_id){
+		$data=$this->data;
+		$data['payment_id']=$payment_id;
+		$data['page_title']='Payment Receipt';
+		$this->load->view('many-recept',$data);
 	}
 }

@@ -130,8 +130,10 @@
                                                 <td><?= show_date($value->supply_date); ?></td>
                                                 <td><?= $value->supply_uniq_id; ?></td>
                                                 <td>
-                                                    <a href="<?= $base_url; ?>sales/supply_view/<?= $value->supply_uniq_id; ?>"
+                                                    <a href="<?= $base_url; ?>sales/supply_view/<?= $value->supply_uniq_id; ?>/<?= $sales_id; ?>"
                                                         class="btn btn-primary btn-xs">View</a>
+                                                    <a href="<?= $base_url; ?>sales/supply_chalan/<?= $value->supply_uniq_id; ?>/<?= $sales_id; ?>"
+                                                        class="btn btn-primary btn-xs" target="_blank">Print Chalan</a>
                                                 </td>
                                             </tr>
                                         <?php } } ?>

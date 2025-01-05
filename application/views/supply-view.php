@@ -33,6 +33,7 @@
                     <div class="col-xs-12">
                         <div class="box">
                             <div class="box-header with-border">
+                                
                             </div>
                             <!-- /.box-header -->
                             <div class="box-body">
@@ -105,38 +106,36 @@
                                     </div>
                                 </div>
                                 <?php
-                                $supply_ref_id=$this->db->select('supply_uniq_id,supply_date')
-                                              ->from('db_sale_supply_item')
-                                              ->where('db_sales_id',$sales_id)
-                                              ->group_by('supply_uniq_id')
-                                              ->get()
-                                              ->result();
+                                $supply=$this->db->select('db_sale_supply_item.*,db_items.item_name,db_items.item_code')
+                                            ->from('db_sale_supply_item')
+                                            ->join('db_items','db_items.id=db_sale_supply_item.item_id')
+                                            ->where('supply_uniq_id',$supply_uniq_id)
+                                            ->get()
+                                            ->result();
                                 ?>
-                                <table class="table table-bordered table-striped" width="100%">
+                                <table class="table table-bordered table-striped">
                                     <thead>
                                         <tr>
-                                            <th>Sr. No.</th>
-                                            <th>Supply Date</th>
-                                            <th>Supply Reference No.</th>
-                                            <th>Actions</th>
+                                            <th>Item Name</th>
+                                            <th>Item Code</th>
+                                            <th>Total supply Quantity</th>
+                                            <th>(<?= $supply[0]->supply_date;  ?>) Supply Quantity</th>
                                         </tr>
-                                      </thead>
-                                      <tbody>
-                                        <?php
-                                        if(!empty($supply_ref_id)){
-                                        foreach ($supply_ref_id as $key => $value) {?>
+                                    </thead>
+                                    <tbody>
+                                        <?php foreach($supply as $row){ 
+                                            $db_salesitems = $this->db->query("select * from db_salesitems where item_id=$row->item_id and sales_id=$sales_id")->row();
+                                            ?>
                                             <tr>
-                                                <td><?= $key+1; ?></td>
-                                                <td><?= show_date($value->supply_date); ?></td>
-                                                <td><?= $value->supply_uniq_id; ?></td>
-                                                <td>
-                                                    <a href="<?= $base_url; ?>sales/supply_view/<?= $value->supply_uniq_id; ?>"
-                                                        class="btn btn-primary btn-xs">View</a>
-                                                </td>
+                                                <td><?= $row->item_name; ?></td>
+                                                <td><?= $row->item_code; ?></td>
+                                                <td><?= $db_salesitems->total_supply; ?></td>
+                                                <td><?= $row->supply_qty; ?></td>
                                             </tr>
-                                        <?php } } ?>
-                                      </tbody>
+                                        <?php } ?>
+                                    </tbody>
                                 </table>
+                                
                             </div>
                             <!-- /.box-body -->
                         </div>
