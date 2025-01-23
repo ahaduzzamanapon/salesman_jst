@@ -127,7 +127,7 @@ th, td {
 <table align="center" width="100%" height='100%' style="border:1px solid;">
     <thead>
       <tr>
-        <th colspan="10">
+        <th colspan="8">
           <table width="100%">
             <tr>
               <th colspan="12" style="text-transform: uppercase;text-align: center;">
@@ -145,7 +145,7 @@ th, td {
                   <?php echo (!empty(trim($company_vat_no))) ? $this->lang->line('vat_number').": ".$company_vat_no."<br>" : '';?>
                 </th>
               <th colspan="6" style="text-align: right;">
-                <img src="<?= base_url('uploads/company/'.$company_logo);?>" width='auto' height='150px'>
+                <img src="http://salesman-jst.mysoftheaven.com/uploads/invenoty_with_POS1.png" width='auto' height='150px'>
               </th>
               
             </tr>
@@ -154,18 +154,20 @@ th, td {
               <center><?= $this->lang->line('customer_details'); ?></center>
               <?php echo $this->lang->line('name').": ".$customer_name; ?><br/>
                 <?php echo $this->lang->line('mobile').": ".$customer_mobile; ?>
+                <br>
+                Address:
                 <?php 
                         if(!empty($customer_address)){
                           echo $customer_address;
-                        }
-                        if(!empty($customer_country)){
-                          echo $customer_country;
                         }
                         if(!empty($customer_state)){
                           echo ",".$customer_state;
                         }
                         if(!empty($customer_postcode)){
                           echo "-".$customer_postcode;
+                        }
+                        if(!empty($customer_country)){
+                          echo ",".$customer_country;
                         }
                       ?>
                       <br>
@@ -198,9 +200,9 @@ th, td {
     <th style='border-right: 1px solid;border-top: 1px solid;' rowspan='2'><?= $this->lang->line('quantity'); ?></th>
     <!-- <th rowspan='2'><?= $this->lang->line('tax'); ?></th>
     <th rowspan='2'><?= $this->lang->line('tax_amount'); ?></th> -->
-    <th style='border-right: 1px solid;border-top: 1px solid;' rowspan='2'><?= $this->lang->line('unit_price'); ?></th>
+    <!-- <th style='border-right: 1px solid;border-top: 1px solid;' rowspan='2'><?= $this->lang->line('unit_price'); ?></th> -->
     <!-- <th rowspan='2'><?= $this->lang->line('discount'); ?></th> -->
-    <th style='border-right: 1px solid;border-top: 1px solid;' rowspan='2'><?= $this->lang->line('discount_amount'); ?></th>
+    <!-- <th style='border-right: 1px solid;border-top: 1px solid;' rowspan='2'><?= $this->lang->line('discount_amount'); ?></th> -->
     <th style='border-right: 1px solid;border-top: 1px solid;' rowspan='2'><?= $this->lang->line('unit_cost'); ?></th>
     <th style='border-right: 1px solid;border-top: 1px solid;' rowspan='2'><?= $this->lang->line('total_amount'); ?></th>
   </tr>
@@ -215,15 +217,15 @@ th, td {
               $tot_discount_amt=0;
               $tot_unit_total_cost=0;
               $tot_total_cost=0;
-              $q2=$this->db->query("SELECT c.item_name, a.sales_qty,
-                                  a.price_per_unit, b.tax,b.tax_name,a.tax_amt,
-                                  a.unit_discount_per,a.discount_amt, a.unit_total_cost,
-                                  a.total_cost 
-                                  FROM 
-                                  db_salesitems AS a,db_tax AS b,db_items AS c 
-                                  WHERE 
-                                  c.id=a.item_id AND b.id=a.tax_id AND a.sales_id='$sales_id'");
+              $this->db->select('c.item_name, a.sales_qty, a.price_per_unit, b.tax, b.tax_name, a.tax_amt, a.unit_discount_per, a.discount_amt, a.unit_total_cost, a.total_cost,db_units.unit_name');
+              $this->db->from('db_salesitems AS a');
+              $this->db->join('db_tax AS b', 'b.id = a.tax_id');
+              $this->db->join('db_items AS c', 'c.id = a.item_id');
+              $this->db->join('db_units', 'c.unit_id = db_units.id');
+              $this->db->where('a.sales_id', $sales_id);
+              $q2 = $this->db->get();
               foreach ($q2->result() as $res2) {
+                //dd($res2);
                   $discount = (empty($res2->unit_discount_per)||$res2->unit_discount_per==0)? '-':$res2->unit_discount_per."%";
                   $discount_amt = (empty($res2->discount_amt)||$res2->unit_discount_per==0)? '-':$res2->discount_amt."";
 
@@ -232,12 +234,12 @@ th, td {
                   echo "<td style='border-right: 1px solid;border-top: 1px solid;'>".++$i."</td>";
                   echo "<td style='border-right: 1px solid;border-top: 1px solid;' colspan='4'>".$res2->item_name."</td>";
                   //echo "<td>".$res2->price_per_unit."</td>";
-                  echo "<td style='border-right: 1px solid;border-top: 1px solid;'>".$res2->sales_qty."</td>";
+                  echo "<td style='border-right: 1px solid;border-top: 1px solid;'>".$res2->sales_qty."".$res2->unit_name."</td>";
                   /*echo "<td>".$res2->tax."%<br>".$res2->tax_name."</td>";
                   echo "<td style='text-align: right;'>".$res2->tax_amt."</td>";*/
-                  echo "<td style='text-align: right;border-right: 1px solid;border-top: 1px solid;'>".$unit_price_with_tax."</td>";
+                  // echo "<td style='text-align: right;border-right: 1px solid;border-top: 1px solid;'>".$unit_price_with_tax."</td>";
                   /*echo "<td style='text-align: right;'>".$discount."</td>";*/
-                  echo "<td style='text-align: right;border-right: 1px solid;border-top: 1px solid;'>".$discount_amt."</td>";
+                  // echo "<td style='text-align: right;border-right: 1px solid;border-top: 1px solid;'>".$discount_amt."</td>";
                   echo "<td style='text-align: right;border-right: 1px solid;border-top: 1px solid;'>".$res2->unit_total_cost."</td>";
                   echo "<td style='text-align: right;border-right: 1px solid;border-top: 1px solid;'>".$res2->total_cost."</td>";
                   echo "</tr>";  
@@ -263,7 +265,7 @@ th, td {
     <td colspan="1" style="text-align: right;" ><b><?php echo number_format(($tot_total_cost),2,'.',''); ?></b></td>
   </tr> -->
   <tr>
-    <td colspan="9" style="text-align: right;"><b><?= $this->lang->line('total'); ?></b></td>
+    <td colspan="7" style="text-align: right;"><b><?= $this->lang->line('total'); ?></b></td>
     <td colspan="1" style="text-align: right;" ><b><?php echo number_format(($tot_total_cost),2,'.',''); ?></b></td>
   </tr>
   <!-- <tr>
@@ -272,26 +274,26 @@ th, td {
   </tr> -->
   
   <tr>
-    <td colspan="9" style="text-align: right;"><b><?= $this->lang->line('other_charges'); ?></b></td>
+    <td colspan="7" style="text-align: right;"><b><?= $this->lang->line('other_charges'); ?></b></td>
     <td colspan="1" style="text-align: right;" ><b><?php echo number_format(round($other_charges_amt),2,'.',''); ?></b></td>
   </tr>
   <tr>
-    <td colspan="9" style="text-align: right;"><b><?= $this->lang->line('discount_on_all'); ?>(<?= $discount_to_all_input." ".$discount_to_all_type; ?>)</b></td>
+    <td colspan="7" style="text-align: right;"><b><?= $this->lang->line('discount_on_all'); ?>(<?= $discount_to_all_input." ".$discount_to_all_type; ?>)</b></td>
     <td colspan="1" style="text-align: right;" ><b><?php echo number_format(round($tot_discount_to_all_amt),2,'.',''); ?></b></td>
   </tr>
   <tr>
-    <td colspan="9" style="text-align: right;"><b><?= $this->lang->line('round_off'); ?></b></td>
+    <td colspan="7" style="text-align: right;"><b><?= $this->lang->line('round_off'); ?></b></td>
     <td colspan="1" style="text-align: right;" ><b><?php echo number_format(($round_off),2,'.',''); ?></b></td>
   </tr>
   <tr>
-    <td colspan="8">
+    <td colspan="6">
       <?php echo "<span class='amt-in-word'>Amount in words: <i style='font-weight:bold;'>".no_to_words(round($grand_total))." Only</i></span>"; ?>
     </td>
     <td colspan="1" style="text-align: right;"><b><?= $this->lang->line('grand_total'); ?></b></td>
     <td colspan="1" style="text-align: right;" ><b><?php echo number_format(round($grand_total),2,'.',''); ?></b></td>
   </tr>
   <tr>
-    <td colspan="10">
+    <td colspan="8">
 <?php
       function no_to_words($no)
       {   
@@ -323,25 +325,23 @@ th, td {
              }
         }
       }
-     /* echo "<span class='amt-in-word'>Amount in words: <i style='font-weight:bold;'>".no_to_words(round($grand_total))." Only</i></span>";*/
-
-      ?>
+?>
   
 </td>
   </tr>
 
   <tr>
-    <td colspan="5" style="padding-top: 100px">
+    <td colspan="4" style="text-align: center;padding-top: 100px;border: 1px solid;">
       <b><?= $this->lang->line('customer_signature'); ?></b>
     </td>
-    <td colspan="5" style="text-align: right;padding-top: 100px">
+    <td colspan="4" style="text-align: center;padding-top: 100px;border: 1px solid;">
       <b><?= $this->lang->line('authorised_signature'); ?>
     </td>
   </tr>
 
   <?php if(!empty($sales_invoice_footer_text)) {?>
   <tr style="border-top: 1px solid;">
-    <td colspan="10" style="text-align: center;">
+    <td colspan="8" style="text-align: center;">
       <b><?= $sales_invoice_footer_text; ?></b>
     </td>
   </tr>

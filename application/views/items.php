@@ -456,7 +456,7 @@
             var category_id = $('#category_id').val();
             $.post('<?php echo base_url(); ?>items/get_sub_category', {category_id:category_id}, function(result) {
                $('#sub_category_id').html(result);
-               var sub_cat= <?= $sub_category_id; ?>;
+               var sub_cat= '<?= $sub_category_id; ?>';
                if(sub_cat != ""){
                   $('#sub_category_id').val(sub_cat).trigger('change');
                }

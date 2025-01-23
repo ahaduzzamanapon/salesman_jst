@@ -188,7 +188,7 @@
         <!-- /.col -->
         <div class="col-sm-4 invoice-col">
           <b><?= $this->lang->line('invoice'); ?> #<?php echo  $sales_code; ?></b><br>
-          <b><?= $this->lang->line('sales_status'); ?> :<?php echo  $sales_status; ?></b><br>
+          
           <b><?= $this->lang->line('reference_no'); ?> :<?php echo  $reference_no; ?></b><br>
         </div>
         <!-- /.col -->
@@ -399,23 +399,11 @@
       <!-- this row will not appear when printing -->
       <div class="row no-print">
         <div class="col-xs-12">
-          <?php if($CI->permissions('sales_edit')) {
-           // $str2= ($pos==1)? 'pos/edit/':'sales/update/'; ?>
-          <!-- <a href="<?php echo $base_url; ?><?=$str2;?><?php echo  $sales_id ?>" class="btn btn-success">
-            <i class="fa  fa-edit"></i> Edit
-          </a> -->
-        <?php } ?>
+          
 
+      
 
-          <a href="<?php echo $base_url; ?>sales/print_invoice/<?php echo  $sales_id ?>" target="_blank" class="btn btn-warning">
-            <i class="fa fa-print"></i>
-          Print
-        </a>
-
-        <a href="<?php echo $base_url; ?>pos/print_invoice_pos/<?php echo  $sales_id ?>" target="_blank" class="btn btn-info">
-            <i class="fa fa-file-text"></i>
-          POS Invoice
-        </a>
+   
 
 
         <a href="<?php echo $base_url; ?>sales/pdf/<?php echo  $sales_id ?>" target="_blank" class="btn btn-primary">
@@ -423,11 +411,7 @@
           PDF
         </a>
 
-        <?php if($CI->permissions('sales_return_add')) { ?>
-            <a href="<?php echo $base_url; ?>sales_return/add/<?php echo  $sales_id ?>" class="btn btn-danger">
-            <i class="fa  fa-undo"></i> Sales Return
-          </a>
-          <?php } ?>
+      
 
 
 

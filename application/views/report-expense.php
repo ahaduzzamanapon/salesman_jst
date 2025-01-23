@@ -130,6 +130,7 @@
             <div class="box-header">
               <h3 class="box-title">Records Table</h3>
               <button type="button" class="btn btn-info pull-right btnExport" title="Download Data in Excel Format">Excel</button>
+              <button type="button" class="btn btn-info pull-right btnpdf" title="Download Data in PDF Format">PDF</button>
             </div>
             <!-- /.box-header -->
             <div class="box-body table-responsive no-padding">
@@ -164,7 +165,10 @@
   <!-- /.content-wrapper -->
   
  <?php include"footer.php"; ?>
-
+ <script>
+    // Add event listener to the button
+    document.querySelector(".btnpdf").addEventListener("click", printData);
+</script>
  
   <!-- Add the sidebar's background. This div must be placed
        immediately after the control sidebar -->

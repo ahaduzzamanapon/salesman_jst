@@ -124,9 +124,9 @@
                                     <span id="sales_date_msg" style="display:none" class="text-danger"></span>
                                  </div>
                               </div>
-                              <div class="form-group">
-                                 <label for="sales_status" class="col-sm-2 control-label"><?= $this->lang->line('status'); ?> <label class="text-danger">*</label></label>
-                                 <div class="col-sm-3">
+                              <div class="form-group ">
+                                 <label for="sales_status" style="display:none" class="col-sm-2 control-label"><?= $this->lang->line('status'); ?> <label class="text-danger">*</label></label>
+                                 <div class="col-sm-3 d-none" style="display:none">
                                        <select class="form-control select2" id="sales_status" name="sales_status"  style="width: 100%;" onkeyup="shift_cursor(event,'mobile')">
                                           <?php
                                                $received_select = ($sales_status=='Final') ? 'selected' : '';

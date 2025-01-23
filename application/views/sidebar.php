@@ -282,6 +282,9 @@
               <?php if($CI->permissions('items_category_view')) { ?>
               <li class="category-view-active-li"><a href="<?php echo $base_url; ?>category/view"><i class="fa fa-list "></i> <span><?= $this->lang->line('categories_list'); ?></span></a></li>
               <?php } ?>
+              <?php if($CI->permissions('items_category_view')) { ?>
+              <li class="category-view-active-li"><a href="<?php echo $base_url; ?>category/sub_category"><i class="fa fa-list "></i> <span>Sub category</span></a></li>
+              <?php } ?>
 
               <?php if($CI->permissions('brand_add')) { ?>
               <li class="brand-active-li"><a href="<?php echo $base_url; ?>brands/add"><i class="fa fa-plus-square-o "></i> <span><?= $this->lang->line('new_brand'); ?></span>

@@ -41,25 +41,30 @@ class Reports_model extends CI_Model {
 				echo "<td>".show_date($res1->sales_date)."</td>";
 				echo "<td>".$res1->customer_code."</td>";
 				echo "<td>".$res1->customer_name."</td>";
-				$vat = $this->db->where("id",$res1->vat_id)->get('db_tax')->row();
-				echo "<td>". ceil($vat->tax)."% </td>";
+				// $vat = $this->db->where("id",$res1->vat_id)->get('db_tax')->row();
+				// if(!empty($vat)){
+				// 	echo "<td>". ceil($vat->tax)."% </td>";
+				// }else{
+				// 	echo "<td></td>";
+				// }
+
 				echo "<td class='text-right'>".number_format($res1->grand_total,2,'.','')."</td>";
 				echo "<td class='text-right'>".number_format($res1->paid_amount,2,'.','')."</td>";
-				// echo "<td class='text-right'>".number_format(($res1->grand_total-$res1->paid_amount),2,'.','')."</td>";
+				echo "<td class='text-right'>".number_format(($res1->grand_total-$res1->paid_amount),2,'.','')."</td>";
 				echo "</tr>";
 				$tot_grand_total+=$res1->grand_total;
 				$tot_paid_amount+=$res1->paid_amount;
-				// $tot_due_amount+=($res1->grand_total-$res1->paid_amount);
+				$tot_due_amount+=($res1->grand_total-$res1->paid_amount);
 
 			}
 
 			echo "<tr>
-					  <td class='text-right text-bold' colspan='6'><b>Total :</b></td>
+					  <td class='text-right text-bold' colspan='5'><b>Total :</b></td>
 					  <td class='text-right text-bold'>".number_format($tot_grand_total,2,'.','')."</td>
 					  <td class='text-right text-bold'>".number_format($tot_paid_amount,2,'.','')."</td>
+					  <td class='text-right text-bold'>".number_format($tot_due_amount,2,'.','')."</td>
 					  </tr>";
 					}
-					//   <td class='text-right text-bold'>".number_format($tot_due_amount,2,'.','')."</td>
 		else{
 			echo "<tr>";
 			echo "<td class='text-center text-danger' colspan=13>No Records Found</td>";
@@ -318,14 +323,16 @@ class Reports_model extends CI_Model {
 		extract($_POST);
 
 
-		$this->db->select("a.*,b.*");
-		$this->db->from("db_items as a,db_tax as b");
+		$this->db->select("a.*,b.*,c.unit_name");
+		$this->db->from("db_items as a,db_tax as b,db_units as c");
 		$this->db->where("b.id=a.tax_id");
+		$this->db->where("c.id=a.unit_id");
 		$this->db->order_by("a.id");
 
 		//echo $this->db->get_compiled_select();exit();
 
 		$q1=$this->db->get();
+		//dd($q1->result());
 		if($q1->num_rows()>0){
 			$i=0;
 			/*$tot_grand_total=0;
@@ -337,10 +344,8 @@ class Reports_model extends CI_Model {
 				echo "<td>".++$i."</td>";
 				echo "<td>".$res1->item_code."</td>";
 				echo "<td>".$res1->item_name."</td>";
-				echo "<td class='text-right'>".number_format($res1->purchase_price,2,'.','')."</td>";
-				echo "<td>".ceil($res1->tax)."% [".$tax_type."]</td>";
-				echo "<td class='text-right'>".number_format($res1->sales_price,2,'.','')."</td>";
-				echo "<td>".$res1->stock."</td>";
+				
+				echo "<td>".$res1->stock.' '.$res1->unit_name.''."</td>";
 				echo "</tr>";
 				/*$tot_grand_total+=$res1->grand_total;
 				$tot_paid_amount+=$res1->paid_amount;

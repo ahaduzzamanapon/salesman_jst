@@ -100,12 +100,9 @@
     $company_vat_no=$res1->vat_no;
     $company_pan_no=$res1->pan_no;
     $logo=$res1->company_logo;
-
-
-
         ?>
         <div>
-            <img class="logo" src="<?php echo $base_url; ?>uploads/company/<?=$logo?>" alt="Company Logo">
+            <img class="logo" src="http://salesman-jst.mysoftheaven.com/uploads/invenoty_with_POS1.png" alt="Company Logo">
         </div>
        
         <div class="company-info">
@@ -115,7 +112,7 @@
         </div>
     </div>
     <div class="invoice-title">
-      INVOICE / BILL
+      Challan
     </div>
     <?php 
         $q1=$this->db->query("select * from db_sales where id=$sales_id");
@@ -188,7 +185,7 @@
     </div>
     <p><span>Challan No.:</span> <?=$supply_uniq_id?> <span>Date:</span> <?=$supply[0]->supply_date?></p>
     <div class="footer">
-      Thank you for doing business with us!
+    Once goods are sold it can't be returned or changed
     </div>
     <div class="signature-section">
       <div>

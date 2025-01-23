@@ -139,32 +139,7 @@ class Sales extends MY_Controller {
 												</a>
 											</li>';
 
-											if($this->permissions('sales_add') || $this->permissions('sales_edit'))
-											$str2.='<li>
-												<a title="Update Record ?" target="_blank" href="sales/print_invoice/'.$sales->id.'">
-													<i class="fa fa-fw fa-print text-blue"></i>Print
-												</a>
-											</li>
-
-											<li>
-												<a title="Update Record ?" target="_blank" href="sales/pdf/'.$sales->id.'">
-													<i class="fa fa-fw fa-file-pdf-o text-blue"></i>PDF
-												</a>
-											</li>
-											<li>
-												<a style="cursor:pointer" title="Print POS Invoice ?" onclick="print_invoice('.$sales->id.')">
-													<i class="fa fa-fw fa-file-text text-blue"></i>POS Invoice
-												</a>
-											</li>';
-
-											if ($sales->return_bit != 1) {
-												if($this->permissions('sales_return'))
-												$str2.='<li>
-													<a title="Sales Return" href="sales_return/add/'.$sales->id.'">
-														<i class="fa fa-fw fa-undo text-blue"></i>Sales Return
-													</a>
-												</li>';
-											}
+											
 											if($this->permissions('sales_delete'))
 											$str2.='<li>
 												<a style="cursor:pointer" title="Delete Record ?" onclick="delete_sales(\''.$sales->id.'\')">
@@ -271,12 +246,13 @@ class Sales extends MY_Controller {
 		$data=$this->data;
 		$data['page_title']=$this->lang->line('sales_invoice');
         $data=array_merge($data,array('sales_id'=>$sales_id));
-        if(get_invoice_format_id()==2){
-			$this->load->view('print-sales-invoice-2',$data);
-		}
-		else{
-			$this->load->view('print-sales-invoice',$data);
-		}
+		$this->load->view('print-sales-invoice-2',$data);
+        // if(get_invoice_format_id()==2){
+		// }
+		// else{
+		// 	//dd(5555);
+		// 	$this->load->view('print-sales-invoice',$data);
+		// }
 
 
         // Get output html

@@ -118,6 +118,7 @@
           <div class="box">
             <div class="box-header">
               <h3 class="box-title"><?= $this->lang->line('records_table'); ?></h3>
+              <button type="button" class="btn btn-info pull-right btnpdf" title="Download Data in PDF Format">PDF</button>
               <button type="button" class="btn btn-info pull-right btnExport" title="Download Data in Excel Format">Excel</button>
             </div>
             <!-- /.box-header -->
@@ -182,7 +183,10 @@ $(".btnExport").click(function(event) {
 
 <!-- Make sidebar menu hughlighter/selector -->
 <script>$(".<?php echo basename(__FILE__,'.php');?>-active-li").addClass("active");</script>
-    
+<script>
+    // Add event listener to the button
+    document.querySelector(".btnpdf").addEventListener("click", printData);
+</script>
     
 </body>
 </html>

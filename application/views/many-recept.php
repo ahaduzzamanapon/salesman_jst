@@ -90,11 +90,27 @@
         }
     </style>
 </head>
+<?php
+
+$data=$this->db->query("select * from db_salespayments where id=$payment_id")->row();
+$sales_id=$data->sales_id;
+$sale_data=$this->db->query("select * from db_sales where id=$sales_id")->row();
+$customer_id=$sale_data->customer_id;
+$customer_data=$this->db->query("select * from db_customers where id=$customer_id")->row();
+//dd($customer_data);
+
+
+//dd($data);
+$payment= $data->payment;
+
+
+
+?>
 <body>
     <div class="container">
         <div class="header">
             <div class="logo">
-                <img src="logo.png" alt="Logo">
+                <img src="http://salesman-jst.mysoftheaven.com/uploads/invenoty_with_POS1.png" alt="Logo">
             </div>
             <div class="details">
                 <h2>JST Trading Corporation</h2>
@@ -109,18 +125,54 @@
         <div class="content">
             <div class="row">
                 <div class="label">Received with thanks from</div>
-                <div class="value"></div>
+                <div class="value"><?=$customer_data->customer_name?></div>
             </div>
             <div class="row">
                 <div class="label">Purpose</div>
                 <div class="value"></div>
             </div>
+           
+
+<?php
+      function no_to_words($no)
+      {   
+       $words = array('0'=> '' ,'1'=> 'One' ,'2'=> 'Two' ,'3' => 'Three','4' => 'Four','5' => 'Five','6' => 'Six','7' => 'Seven','8' => 'Eight','9' => 'Nine','10' => 'Ten','11' => 'Eleven','12' => 'Twelve','13' => 'Thirteen','14' => 'Fouteen','15' => 'Fifteen','16' => 'Sixteen','17' => 'Seventeen','18' => 'Eighteen','19' => 'Nineteen','20' => 'Twenty','30' => 'Thirty','40' => 'Fourty','50' => 'Fifty','60' => 'Sixty','70' => 'Seventy','80' => 'Eighty','90' => 'Ninty','100' => 'Hundred &','1000' => 'Thousand','100000' => 'Lakh','10000000' => 'Crore');
+        if($no == 0)
+          return ' ';
+        else {
+        $novalue='';
+        $highno=$no;
+        $remainno=0;
+        $value=100;
+        $value1=1000;       
+            while($no>=100)    {
+              if(($value <= $no) &&($no  < $value1))    {
+              $novalue=$words["$value"];
+              $highno = (int)($no/$value);
+              $remainno = $no % $value;
+              break;
+              }
+              $value= $value1;
+              $value1 = $value * 100;
+            }       
+            if(array_key_exists("$highno",$words))
+              return $words["$highno"]." ".$novalue." ".no_to_words($remainno);
+            else {
+             $unit=$highno%10;
+             $ten =(int)($highno/10)*10;            
+             return $words["$ten"]." ".$words["$unit"]." ".$novalue." ".no_to_words($remainno);
+             }
+        }
+      }
+?>
+
+
             <div class="row">
                 <div class="" style="white-space:nowrap">In Cash / Cheque / D.D. No________________ Bank __________ Branch __________Date____________</div>
             </div>
             <div class="row">
                 <div class="label">Taka</div>
-                <div class="">________________ In Word __________________________</div>
+                <div class=""><?= $payment; ?> In Word : <?= no_to_words($payment); ?></div>
             </div>
         </div>
 

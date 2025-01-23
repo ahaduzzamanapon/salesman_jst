@@ -45,6 +45,8 @@
                                     <!-- form start -->
                                        <input type="hidden" id="base_url" value="<?php echo $base_url;; ?>">
                                           <button type="button" class="btn btn-info pull-right btnExport_i" title="Download Data in Excel Format">Excel</button>
+                                          <button type="button" class="btn btn-info pull-right btnpdf"
+                                          title="Download Data in Excel Format">PDF</button>
                                           <br><br>
                                           <div class="table-responsive">
                                           <table class="table table-bordered table-hover " id="report-data" >
@@ -53,9 +55,6 @@
                                               <th style="">#</th>
                                               <th style=""><?= $this->lang->line('item_code'); ?></th>
                                               <th style=""><?= $this->lang->line('item_name'); ?></th>
-                                              <th style="text-align:right"><?= $this->lang->line('unit_price'); ?>(<?= $CI->currency(); ?>)</th>
-                                              <th style=""><?= $this->lang->line('tax'); ?></th>
-                                              <th style="text-align:right"><?= $this->lang->line('sales_price'); ?>(<?= $CI->currency(); ?>)</th>
                                               <th style=""><?= $this->lang->line('current_stock'); ?></th>
                                             </tr>
                                             </thead>
@@ -78,6 +77,8 @@
                                  <div class="col-md-12">
                                     <!-- form start -->
                                        <input type="hidden" id="base_url" value="<?php echo $base_url;; ?>">
+                                       <button type="button" class="btn btn-info pull-right btnpdf" title="Download Data in PDF Format">PDF</button>
+
                                           <button type="button" class="btn btn-info pull-right btnExport_b" title="Download Data in Excel Format">Excel</button>
                                           <br><br>
                                           <div class="table-responsive">
@@ -166,11 +167,15 @@ $(".btnExport_b").click(function(event) {
            }); 
           });
 </script>
-
+<script>
+    document.querySelector(".btnpdf").addEventListener("click", printData);
+</script>
 
 <!-- Make sidebar menu hughlighter/selector -->
 <script>$(".<?php echo basename(__FILE__,'.php');?>-active-li").addClass("active");</script>
-    
+<script>
+                                document.querySelector(".btnpdf").addEventListener("click", printData);
+                                </script>
     
 </body>
 </html>
