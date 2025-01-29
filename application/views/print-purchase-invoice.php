@@ -192,7 +192,7 @@ th, td {
     <th rowspan='2'><?= $this->lang->line('tax_amount'); ?></th>
     <th rowspan='2'><?= $this->lang->line('discount'); ?></th>
     <th rowspan='2'><?= $this->lang->line('discount_amount'); ?></th>
-    <th rowspan='2'><?= $this->lang->line('unit_cost'); ?></th>
+    <th rowspan='2'>Unit Price</th>
     <th rowspan='2'><?= $this->lang->line('total_amount'); ?></th>
 
   </tr>

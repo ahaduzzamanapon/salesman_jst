@@ -30,7 +30,7 @@
         text-align: right;
         font-size: 13px;
     }
-    
+
     .invoice-title {
         margin: 20px 0;
         font-size: 18px;
@@ -104,17 +104,17 @@
         <div>
             <img class="logo" src="http://salesman-jst.mysoftheaven.com/uploads/invenoty_with_POS1.png" alt="Company Logo">
         </div>
-       
+
         <div class="company-info">
             <h1><?=$company_name?></h1>
-            <p><?=$company_address?> Bangladesh</p>
+            <p><?=$company_address?></p>
             <p>Email: <?=$company_email?> | Phone: +88 <?=$company_phone?></p>
         </div>
     </div>
     <div class="invoice-title">
       Challan
     </div>
-    <?php 
+    <?php
         $q1=$this->db->query("select * from db_sales where id=$sales_id");
         $res1=$q1->row();
         $customer_id = $res1->customer_id;
@@ -141,8 +141,8 @@
                                             ->where('supply_uniq_id',$supply_uniq_id)
                                             ->get()
                                             ->result();
-    
-    
+
+
     ?>
     <div class="details">
       <p style="width: 100%"><span width="10%">TO:</span> <span class="doted" style="width: 90%"><?=$res2->customer_name?></span></p>
@@ -169,7 +169,7 @@
             <th>SL NO.</th>
             <th>DESCRIPTION</th>
             <th>QUANTITY</th>
-            
+
           </tr>
         </thead>
         <tbody>

@@ -193,10 +193,10 @@ class Sales_model extends CI_Model {
 				$tax_id 			=$this->xss_html_filter(trim($_REQUEST['td_data_'.$i.'_15']));
 				//$tax_amt 			=$this->xss_html_filter(trim($_REQUEST['td_data_'.$i.'_5']));
 				$unit_total_cost	=$this->xss_html_filter(trim($_REQUEST['td_data_'.$i.'_10']));
-				$unit_discount_per	=$this->xss_html_filter(trim($_REQUEST['td_data_'.$i.'_8']));
+				$discount_amt		=$this->xss_html_filter(trim($_REQUEST['td_data_'.$i.'_8']));
 				$total_cost			=$this->xss_html_filter(trim($_REQUEST['td_data_'.$i.'_9']));
-                $unit_discount_per  =(empty($unit_discount_per)) ? 0 : $unit_discount_per;
-				$discount_amt 		=($sales_qty * $unit_total_cost)*$unit_discount_per/100;
+                /* $unit_discount_per  =(empty($unit_discount_per)) ? 0 : $unit_discount_per;
+				$discount_amt 		=($sales_qty * $unit_total_cost)*$unit_discount_per/100; */
 
 				$tax_type =$this->db->select('tax_type')->from('db_items')->where('id',$item_id)->get()->row()->tax_type;
 
@@ -213,30 +213,10 @@ class Sales_model extends CI_Model {
 						$tax_amt = $this->inclusive($price_per_unit,$unit_tax);
 					}
 				}
-
-				//$tax_amt = $tax_amt * $sales_qty;
-				if($tax_type=='Exclusive'){
-					$single_unit_total_cost = $price_per_unit + ($unit_tax * $price_per_unit / 100);
-					$single_unit_discount = ($single_unit_total_cost * $unit_discount_per)/100;
-					$single_unit_total_cost -=$single_unit_discount;
+				$unit_dis = 0;
+				if (($discount_amt != 0) && ($discount_amt != '')) {
+					$unit_dis = $discount_amt / $sales_qty; //Unit Discount
 				}
-				else{//Inclusive
-					$single_unit_discount = ($price_per_unit * $unit_discount_per)/100;
-					$single_unit_total_cost =$price_per_unit-$single_unit_discount;
-				}
-
-
-				if($tax_id=='' || $tax_id==0){$tax_id=null;}
-				if($tax_amt=='' || $tax_amt==0){$tax_amt=null;}
-				if($unit_discount_per=='' || $unit_discount_per==0){$unit_discount_per=null;}
-				//if($unit_total_cost=='' || $unit_total_cost==0){$unit_total_cost=null;}
-				if($total_cost=='' || $total_cost==0){$total_cost=null;}
-
-				if(!empty($discount_to_all_input) && $discount_to_all_input!=0){
-					$unit_discount_per =null;
-					$discount_amt =null;
-				}
-
 				$salesitems_entry = array(
 		    				'sales_id' 			=> $sales_id,
 		    				'sales_status'		=> $sales_status,
@@ -245,23 +225,17 @@ class Sales_model extends CI_Model {
 		    				'price_per_unit' 	=> $price_per_unit,
 		    				'tax_id' 			=> $tax_id,
 		    				'tax_amt' 			=> $tax_amt,
-		    				'unit_discount_per' => $unit_discount_per,
+		    				'unit_discount_per' => $unit_dis,
 		    				'discount_amt' 		=> $discount_amt,
-		    				'unit_total_cost' 	=> $single_unit_total_cost,
+		    				'unit_total_cost' 	=> $price_per_unit - $unit_dis,
 		    				'total_cost' 		=> $total_cost,
 		    				'status'	 		=> 1,
 		    			);
 				$q2 = $this->db->insert('db_salesitems', $salesitems_entry);
-				// //UPDATE itemS QUANTITY IN itemS TABLE
-				// $this->load->model('pos_model');
-				// $q6=$this->pos_model->update_items_quantity($item_id);
-				// if(!$q6){
-				// 	return "failed";
-				// }
 			}
 		}//for end
 		if($amount=='' || $amount==0){$amount=null;}
-		if($amount>0 && !empty($payment_type)){
+		if($amount > 0 && !empty($payment_type)){
 			$salespayments_entry = array(
 					'sales_id' 		=> $sales_id,
 					'payment_date'		=> $sales_date,//Current Payment with sales entry
@@ -277,15 +251,12 @@ class Sales_model extends CI_Model {
 				);
 
 			$q3 = $this->db->insert('db_salespayments', $salespayments_entry);
-
 		}
-
 
 		$q10=$this->update_sales_payment_status($sales_id);
 		if($q10!=1){
 			return "failed";
 		}
-
 
 		$sms_info='';
 		if(isset($send_sms) && $customer_id!=1){
@@ -895,7 +866,7 @@ class Sales_model extends CI_Model {
 											<div class="col-md-12">
 												<div class="row">
 													<div class="col-md-12">
-														<?php 
+														<?php
 														$sales_items = $this->db->select('db_salesitems.*, db_items.item_name')
 															->from('db_salesitems')
 															->join('db_items', 'db_items.id = db_salesitems.item_id')

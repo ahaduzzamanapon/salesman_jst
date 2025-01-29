@@ -216,7 +216,7 @@
                                                    <th rowspan='2' style="width:15%"><?= $this->lang->line('item_name'); ?></th>
                                                    <th rowspan='2' style="width:10%"><?= $this->lang->line('quantity'); ?></th>
                                                    <th rowspan='2' style="width:10%"><?= $this->lang->line('unit_price'); ?></th>
-                                                   <th rowspan='2' style="width:10%"><?= $this->lang->line('discount'); ?>(%)</th>
+                                                   <th rowspan='2' style="width:10%"><?= $this->lang->line('discount'); ?></th>
                                                    <th rowspan='2' style="width:7.5%"><?= $this->lang->line('total_amount'); ?></th>
                                                    <th rowspan='2' style="width:7.5%"><?= $this->lang->line('action'); ?></th>
                                                 </tr>

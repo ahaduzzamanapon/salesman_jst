@@ -232,7 +232,7 @@
                 <th class="text-left"><?= $this->lang->line('item_name'); ?></th>
                 <th class="text-right"><?= $this->lang->line('quantity'); ?></th>
                 <th class="text-right"><?= $this->lang->line('unit_price'); ?></th>
-                <th class="text-right">Item Cost</th>
+                <th class="text-right">Item Price</th>
                 <th class="text-right">Vat</th>
                 <th class="text-right">Discount</th>
                 <th class="text-right"><?= $this->lang->line('total_amount'); ?></th>

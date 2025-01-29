@@ -188,7 +188,7 @@
         <!-- /.col -->
         <div class="col-sm-4 invoice-col">
           <b><?= $this->lang->line('invoice'); ?> #<?php echo  $sales_code; ?></b><br>
-          
+
           <b><?= $this->lang->line('reference_no'); ?> :<?php echo  $reference_no; ?></b><br>
         </div>
         <!-- /.col -->
@@ -205,12 +205,12 @@
               <th><?= $this->lang->line('item_name'); ?></th>
               <th style="text-align:right"><?= $this->lang->line('unit_price'); ?></th>
               <th style="text-align:right"><?= $this->lang->line('quantity'); ?></th>
-              <th style="text-align:right"><?= $this->lang->line('net_cost'); ?></th>
+              <th style="text-align:right">Net Price</th>
               <th style="text-align:right"><?= $this->lang->line('tax'); ?></th>
               <th style="text-align:right"><?= $this->lang->line('tax_amount'); ?></th>
               <th style="text-align:right"><?= $this->lang->line('discount'); ?></th>
               <th style="text-align:right"><?= $this->lang->line('discount_amount'); ?></th>
-              <th style="text-align:right"><?= $this->lang->line('unit_cost'); ?></th>
+              <th style="text-align:right">Unit Price</th>
               <th style="text-align:right"><?= $this->lang->line('total_amount'); ?></th>
             </tr>
             </thead>
@@ -399,11 +399,11 @@
       <!-- this row will not appear when printing -->
       <div class="row no-print">
         <div class="col-xs-12">
-          
 
-      
 
-   
+
+
+
 
 
         <a href="<?php echo $base_url; ?>sales/pdf/<?php echo  $sales_id ?>" target="_blank" class="btn btn-primary">
@@ -411,7 +411,7 @@
           PDF
         </a>
 
-      
+
 
 
 

@@ -199,7 +199,7 @@
               <th><?= $this->lang->line('tax_amount'); ?></th>
               <th><?= $this->lang->line('discount'); ?></th>
               <th><?= $this->lang->line('discount_amount'); ?></th>
-              <th><?= $this->lang->line('unit_cost'); ?></th>
+              <th>Unit Price</th>
               <th><?= $this->lang->line('total_amount'); ?></th>
             </tr>
             </thead>

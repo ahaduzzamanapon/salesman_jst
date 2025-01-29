@@ -12,8 +12,8 @@ table, th, td {
 }
 th, td {
     padding: 5px;
-    text-align: left;   
-    vertical-align:top 
+    text-align: left;
+    vertical-align:top
 }
 .dashed_top{
   border-top-style: dashed;
@@ -53,7 +53,7 @@ th, td {
     $q4=$this->db->query("select sales_invoice_footer_text from db_sitesettings where id=1");
     $res4=$q4->row();
     $sales_invoice_footer_text=$res4->sales_invoice_footer_text;
-    
+
 
     $q3=$this->db->query("SELECT a.customer_name,a.mobile,a.phone,a.gstin,a.tax_number,a.email,
                            a.opening_balance,a.country_id,a.state_id,a.created_by,
@@ -72,14 +72,14 @@ th, td {
                            b.payment_status
 
                            FROM db_customers a,
-                           db_sales b 
-                           WHERE 
-                           a.`id`=b.`customer_id` AND 
-                           b.`id`='$sales_id' 
+                           db_sales b
+                           WHERE
+                           a.`id`=b.`customer_id` AND
+                           b.`id`='$sales_id'
                            ");
-                           /*GROUP BY 
+                           /*GROUP BY
                            b.`customer_code`*/
-    
+
     $res3=$q3->row();
     $customer_name=$res3->customer_name;
     $customer_mobile=$res3->mobile;
@@ -100,7 +100,7 @@ th, td {
     $sales_status=$res3->sales_status;
     $created_by=$res3->created_by;
 
-    
+
     $subtotal=$res3->subtotal;
     $grand_total=$res3->grand_total;
     $other_charges_input=$res3->other_charges_input;
@@ -113,14 +113,14 @@ th, td {
     $tot_discount_to_all_amt=$res3->tot_discount_to_all_amt;
     $round_off=$res3->round_off;
     $payment_status=$res3->payment_status;
-    
+
     if(!empty($customer_country)){
-      $customer_country = $this->db->query("select country from db_country where id='$customer_country'")->row()->country;  
+      $customer_country = $this->db->query("select country from db_country where id='$customer_country'")->row()->country;
     }
     if(!empty($customer_state)){
-      $customer_state = $this->db->query("select state from db_states where id='$customer_state'")->row()->state;  
+      $customer_state = $this->db->query("select state from db_states where id='$customer_state'")->row()->state;
     }
-    
+
 
     ?>
 
@@ -147,7 +147,7 @@ th, td {
               <th colspan="6" style="text-align: right;">
                 <img src="http://salesman-jst.mysoftheaven.com/uploads/invenoty_with_POS1.png" width='auto' height='150px'>
               </th>
-              
+
             </tr>
             <tr class=" ">
               <td colspan="6" style="border: 1px solid;" >
@@ -156,7 +156,7 @@ th, td {
                 <?php echo $this->lang->line('mobile').": ".$customer_mobile; ?>
                 <br>
                 Address:
-                <?php 
+                <?php
                         if(!empty($customer_address)){
                           echo $customer_address;
                         }
@@ -175,7 +175,7 @@ th, td {
                 <?php echo (!empty(trim($customer_gst_no))) ? $this->lang->line('gst_number').": ".$customer_gst_no."<br>" : '';?>
                 <?php echo (!empty(trim($customer_tax_number))) ? $this->lang->line('tax_number').": ".$customer_tax_number."<br>" : '';?>
             </td>
-              
+
               <td colspan="6" style="border: 1px solid;" >
                       <?= $this->lang->line('invoice_no'); ?> : <?php echo "$sales_code"; ?><br>
                       <?= $this->lang->line('reference_no'); ?> : <?php echo "$reference_no"; ?><br>
@@ -186,13 +186,13 @@ th, td {
           </table>
         </th>
     </tr>
-     
-  
 
 
-      
-  
-    
+
+
+
+
+
   <tr style=''>
     <th style='border-right: 1px solid;border-top: 1px solid;' rowspan='2' style=''>#</th>
     <th style='border-right: 1px solid;border-top: 1px solid;' rowspan='2' colspan='4'><?= $this->lang->line('description'); ?></th>
@@ -203,7 +203,7 @@ th, td {
     <!-- <th style='border-right: 1px solid;border-top: 1px solid;' rowspan='2'><?= $this->lang->line('unit_price'); ?></th> -->
     <!-- <th rowspan='2'><?= $this->lang->line('discount'); ?></th> -->
     <!-- <th style='border-right: 1px solid;border-top: 1px solid;' rowspan='2'><?= $this->lang->line('discount_amount'); ?></th> -->
-    <th style='border-right: 1px solid;border-top: 1px solid;' rowspan='2'><?= $this->lang->line('unit_cost'); ?></th>
+    <th style='border-right: 1px solid;border-top: 1px solid;' rowspan='2'>Unit Price</th>
     <th style='border-right: 1px solid;border-top: 1px solid;' rowspan='2'><?= $this->lang->line('total_amount'); ?></th>
   </tr>
   </thead>
@@ -230,7 +230,7 @@ th, td {
                   $discount_amt = (empty($res2->discount_amt)||$res2->unit_discount_per==0)? '-':$res2->discount_amt."";
 
                   $unit_price_with_tax= number_format($res2->price_per_unit+$res2->tax_amt,2,'.','');
-                  echo "<tr>";  
+                  echo "<tr>";
                   echo "<td style='border-right: 1px solid;border-top: 1px solid;'>".++$i."</td>";
                   echo "<td style='border-right: 1px solid;border-top: 1px solid;' colspan='4'>".$res2->item_name."</td>";
                   //echo "<td>".$res2->price_per_unit."</td>";
@@ -242,7 +242,7 @@ th, td {
                   // echo "<td style='text-align: right;border-right: 1px solid;border-top: 1px solid;'>".$discount_amt."</td>";
                   echo "<td style='text-align: right;border-right: 1px solid;border-top: 1px solid;'>".$res2->unit_total_cost."</td>";
                   echo "<td style='text-align: right;border-right: 1px solid;border-top: 1px solid;'>".$res2->total_cost."</td>";
-                  echo "</tr>";  
+                  echo "</tr>";
                   $tot_qty +=$res2->sales_qty;
                   $tot_sales_price +=$res2->price_per_unit;
                   $tot_tax_amt +=$res2->tax_amt;
@@ -272,7 +272,7 @@ th, td {
     <td colspan="9" style="text-align: right;"><b><?= $this->lang->line('subtotal'); ?></b></td>
     <td colspan="1" style="text-align: right;" ><b><?php echo number_format(round($subtotal),2,'.',''); ?></b></td>
   </tr> -->
-  
+
   <tr>
     <td colspan="7" style="text-align: right;"><b><?= $this->lang->line('other_charges'); ?></b></td>
     <td colspan="1" style="text-align: right;" ><b><?php echo number_format(round($other_charges_amt),2,'.',''); ?></b></td>
@@ -296,7 +296,7 @@ th, td {
     <td colspan="8">
 <?php
       function no_to_words($no)
-      {   
+      {
        $words = array('0'=> '' ,'1'=> 'One' ,'2'=> 'Two' ,'3' => 'Three','4' => 'Four','5' => 'Five','6' => 'Six','7' => 'Seven','8' => 'Eight','9' => 'Nine','10' => 'Ten','11' => 'Eleven','12' => 'Twelve','13' => 'Thirteen','14' => 'Fouteen','15' => 'Fifteen','16' => 'Sixteen','17' => 'Seventeen','18' => 'Eighteen','19' => 'Nineteen','20' => 'Twenty','30' => 'Thirty','40' => 'Fourty','50' => 'Fifty','60' => 'Sixty','70' => 'Seventy','80' => 'Eighty','90' => 'Ninty','100' => 'Hundred &','1000' => 'Thousand','100000' => 'Lakh','10000000' => 'Crore');
         if($no == 0)
           return ' ';
@@ -305,7 +305,7 @@ th, td {
         $highno=$no;
         $remainno=0;
         $value=100;
-        $value1=1000;       
+        $value1=1000;
             while($no>=100)    {
               if(($value <= $no) &&($no  < $value1))    {
               $novalue=$words["$value"];
@@ -315,18 +315,18 @@ th, td {
               }
               $value= $value1;
               $value1 = $value * 100;
-            }       
+            }
             if(array_key_exists("$highno",$words))
               return $words["$highno"]." ".$novalue." ".no_to_words($remainno);
             else {
              $unit=$highno%10;
-             $ten =(int)($highno/10)*10;            
+             $ten =(int)($highno/10)*10;
              return $words["$ten"]." ".$words["$unit"]." ".$novalue." ".no_to_words($remainno);
              }
         }
       }
 ?>
-  
+
 </td>
   </tr>
 
