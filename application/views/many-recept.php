@@ -131,7 +131,22 @@ $payment= $data->payment;
                 <div class="label">Purpose</div>
                 <div class="value"></div>
             </div>
-           
+            <?php
+
+            $data=$this->db->query("select * from db_salespayments where id=$payment_id")->row();
+            $sales_id=$data->sales_id;
+            $sale_data=$this->db->query("select * from db_sales where id=$sales_id")->row();
+            $customer_id=$sale_data->customer_id;
+            $customer_data=$this->db->query("select * from db_customers where id=$customer_id")->row();
+            //dd($customer_data);
+            
+            
+            //dd($data);
+            $payment= $data->payment;
+
+
+            
+            ?>
 
 <?php
       function no_to_words($no)
