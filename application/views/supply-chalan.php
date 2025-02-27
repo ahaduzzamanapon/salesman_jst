@@ -158,8 +158,7 @@
         <?php endif; ?>
       </span></p>
       <p>
-      <span>Bill No: </span> <?=$supply_uniq_id?> <span>
-      <span>Date: </span> <?= $supply[0]->supply_date;  ?> <span>
+      <span>Challan No: </span> <?=$supply_uniq_id?> <span>
         </p>
     </div>
     <div class="table-container">
@@ -183,7 +182,7 @@
         </tbody>
       </table>
     </div>
-    <p><span>Challan No.:</span> <?=$supply_uniq_id?> <span>Date:</span> <?=$supply[0]->supply_date?></p>
+    <p><span>Bill No.:</span> <?=$supply_uniq_id?> <span>Date:</span> <?=$supply[0]->supply_date?></p>
     <div class="footer">
     Once goods are sold it can't be returned or changed
     </div>
