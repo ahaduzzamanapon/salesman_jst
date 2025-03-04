@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,7 +12,7 @@
       padding: 0;
     }
     .container {
-      width: 800px;
+      width: 650px;
       margin: 20px auto;
       border: 1px solid #ccc;
       padding: 20px;
@@ -80,10 +81,15 @@
       border-bottom: 1px dotted #000;
       display: inline-block;
     }
+    h1 {
+            margin: 0;
+            color: #f89c1c;
+        }
   </style>
 </head>
 <body>
   <div class="container">
+
     <div class="header">
     <?php
     $q1=$this->db->query("select * from db_company where id=1 and status=1");
@@ -100,9 +106,23 @@
     $company_vat_no=$res1->vat_no;
     $company_pan_no=$res1->pan_no;
     $logo=$res1->company_logo;
+
+     // Convert image to Base64
+     function imageToBase64($imagePath) {
+      $imageData = file_get_contents($imagePath);
+      $base64 = base64_encode($imageData);
+  
+      // Use getimagesize() to get MIME type
+      $imageInfo = getimagesize($imagePath);
+      $mimeType = $imageInfo['mime'];
+  
+      return 'data:' . $mimeType . ';base64,' . $base64;
+  }
+
+      $logoBase64 = imageToBase64('http://salesman-jst.mysoftheaven.com/uploads/invenoty_with_POS1.png');
         ?>
         <div>
-            <img class="logo" src="http://salesman-jst.mysoftheaven.com/uploads/invenoty_with_POS1.png" alt="Company Logo">
+            <img class="logo" src="<?=$logoBase64?>" alt="Company Logo">
         </div>
        
         <div class="company-info">
@@ -182,7 +202,7 @@
         </tbody>
       </table>
     </div>
-    <p><span>Bill No.:</span> <?=$supply_uniq_id?> <span>Date:</span> <?=$supply[0]->supply_date?></p>
+    <p><span>Bill No/Invoice No:</span> <?=$res1->sales_code?> <span>  Bill Date:</span> <?=$supply[0]->supply_date?> </p>
     <div class="footer">
     Once goods are sold it can't be returned or changed
     </div>
@@ -201,5 +221,33 @@
       </div>
     </div>
   </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <script>
+function generatePDF() {
+    // Get the entire body content
+    const element = document.body;
+
+    html2pdf()
+        .from(element)
+        .set({
+            margin: 10,
+            filename: 'mypage.pdf',
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 2, useCORS: true, allowTaint: true },
+            jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+        })
+        .outputPdf('bloburl') // Get a Blob URL
+        .then((pdfUrl) => {
+            // Open the generated PDF in a new tab
+            window.open(pdfUrl, '_blank');
+        });
+}
+  document.addEventListener('DOMContentLoaded', function() {
+    generatePDF()
+  });
+</script>
 </body>
 </html>
+
+
+

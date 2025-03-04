@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-<title><?= $page_title;?>- Format 2</title>
+<title><?= $page_title;?></title>
 <head>
 <link rel='shortcut icon' href='<?php echo $theme_link; ?>images/favicon.ico' />
 
@@ -33,7 +33,7 @@ th, td {
 }
 </style>
 </head>
-<body onload="window.print();"><!--  -->
+<body >
 <?php
 
     $q1=$this->db->query("select * from db_company where id=1 and status=1");
@@ -120,6 +120,10 @@ th, td {
     if(!empty($customer_state)){
       $customer_state = $this->db->query("select state from db_states where id='$customer_state'")->row()->state;  
     }
+
+
+    $db_sale_supply_item=$this->db->query("select * from db_sale_supply_item where db_sales_id='$sales_id'")->result();
+    
     
 
     ?>
@@ -130,8 +134,8 @@ th, td {
         <th colspan="8">
           <table width="100%">
             <tr>
-              <th colspan="12" style="text-transform: uppercase;text-align: center;">
-              <?=  $this->lang->line('sales_invoice').' '.$sales_status;?>
+              <th colspan="12" style="text-transform: uppercase;text-align: center; font-size: 25px;font-weight: bold">
+              <?=  $this->lang->line('sales_invoice')?>
               </th>
             </tr>
             <tr>
@@ -145,7 +149,7 @@ th, td {
                   <?php echo (!empty(trim($company_vat_no))) ? $this->lang->line('vat_number').": ".$company_vat_no."<br>" : '';?>
                 </th>
               <th colspan="6" style="text-align: right;">
-                <img src="http://salesman-jst.mysoftheaven.com/uploads/invenoty_with_POS1.png" width='auto' height='150px'>
+                <img src="http://salesman-jst.mysoftheaven.com/uploads/invenoty_with_POS1.png" width='auto' height='120px'>
               </th>
               
             </tr>
@@ -181,18 +185,18 @@ th, td {
                       <?= $this->lang->line('reference_no'); ?> : <?php echo "$reference_no"; ?><br>
                       <?= $this->lang->line('date'); ?> : <?php echo show_date($sales_date)." ".$created_time; ?><br>
                       <?= $this->lang->line('sales_man'); ?> : <?php echo ucfirst($created_by); ?><br>
+                      Chalan: 
+                      <?php
+                      foreach ($db_sale_supply_item as $supplyItem) {
+                        echo $supplyItem->supply_uniq_id . ' Date: ' . show_date($supplyItem->supply_date) . ",<br>";
+                      }
+                      ?>
               </td>
             </tr>
           </table>
         </th>
     </tr>
-     
-  
 
-
-      
-  
-    
   <tr style=''>
     <th style='border-right: 1px solid;border-top: 1px solid;' rowspan='2' style=''>#</th>
     <th style='border-right: 1px solid;border-top: 1px solid;' rowspan='2' colspan='4'><?= $this->lang->line('description'); ?></th>

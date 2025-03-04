@@ -13,7 +13,7 @@
         }
 
         .container {
-            width: 800px;
+            width: 650px;
             margin: 20px auto;
             background: #fff;
             border: 1px solid #ddd;
@@ -88,6 +88,17 @@
             display: block;
             margin-top: 5px;
         }
+        .btn{
+            background-color: #f89c1c;
+            border-color: #f89c1c;
+            color: #fff;
+            padding: 5px 10px;
+        }
+        @media print {
+            .btn{
+                display: none;
+            }
+        }
     </style>
 </head>
 <?php
@@ -103,6 +114,20 @@ $customer_data=$this->db->query("select * from db_customers where id=$customer_i
 //dd($data);
 $payment= $data->payment;
 
+// Convert image to Base64
+function imageToBase64($imagePath) {
+    $imageData = file_get_contents($imagePath);
+    $base64 = base64_encode($imageData);
+
+    // Use getimagesize() to get MIME type
+    $imageInfo = getimagesize($imagePath);
+    $mimeType = $imageInfo['mime'];
+
+    return 'data:' . $mimeType . ';base64,' . $base64;
+}
+
+    $logoBase64 = imageToBase64('http://salesman-jst.mysoftheaven.com/uploads/invenoty_with_POS1.png');
+
 
 
 ?>
@@ -110,7 +135,7 @@ $payment= $data->payment;
     <div class="container">
         <div class="header">
             <div class="logo">
-                <img src="http://salesman-jst.mysoftheaven.com/uploads/invenoty_with_POS1.png" alt="Logo">
+                <img src="<?=$logoBase64?>" alt="Logo">
             </div>
             <div class="details">
                 <h2>JST Trading Corporation</h2>
@@ -202,5 +227,30 @@ $payment= $data->payment;
             </div>
         </div>
     </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <script>
+function generatePDF() {
+    // Get the entire body content
+    const element = document.body;
+
+    html2pdf()
+        .from(element)
+        .set({
+            margin: 10,
+            filename: 'mypage.pdf',
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 2, useCORS: true, allowTaint: true },
+            jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+        })
+        .outputPdf('bloburl') // Get a Blob URL
+        .then((pdfUrl) => {
+            // Open the generated PDF in a new tab
+            window.open(pdfUrl, '_blank');
+        });
+}
+  document.addEventListener('DOMContentLoaded', function() {
+    generatePDF()
+  });
+</script>
 </body>
 </html>
